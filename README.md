@@ -9,6 +9,7 @@ A collection of small, self-contained [`@expo/ui`](https://docs.expo.dev/version
 | [Animated Symbols](src/examples/animated-symbols) | Tap SF Symbols to play `symbolEffect` animations |
 | [Numeric Transitions](src/examples/numeric-transitions) | Counter with `numericText` content transitions and glass buttons |
 | [Swift Charts](src/examples/swift-charts) | Every native `Chart` type animating on one shared data set |
+| [Liquid Glass](src/examples/liquid-glass) | `GlassEffectContainer` morphing orbs, tinted glass, clear/regular variants (iOS 26+) |
 
 Each example lives in its own folder under `src/examples/` with all of its components, so a demo can be dropped into any Expo SDK 57 project as-is. New examples register themselves in [`src/examples/registry.ts`](src/examples/registry.ts).
 

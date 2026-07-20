@@ -4,6 +4,7 @@ import type { SFSymbol } from 'sf-symbols-typescript';
 import AnimatedSymbolsScreen from './animated-symbols';
 import NumericTransitionsScreen from './numeric-transitions';
 import SwiftChartsScreen from './swift-charts';
+import LiquidGlassScreen from './liquid-glass';
 
 export type Example = {
   slug: string;
@@ -34,5 +35,12 @@ export const EXAMPLES: Example[] = [
     description: 'Every native chart type animating on one data set',
     systemImage: 'chart.bar.fill',
     screen: SwiftChartsScreen,
+  },
+  {
+    slug: 'liquid-glass',
+    title: 'Liquid Glass',
+    description: 'GlassEffectContainer morphing, tints, and glass buttons',
+    systemImage: 'drop.fill',
+    screen: LiquidGlassScreen,
   },
 ];
