@@ -25,7 +25,7 @@ Each example lives in its own folder under `src/examples/` with all of its compo
 2. Start the app
 
    ```bash
-   bunx expo start --ios
+   bun run ios
    ```
 
 ## Structure
