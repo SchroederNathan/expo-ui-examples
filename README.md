@@ -1,6 +1,6 @@
 # Expo UI Examples
 
-A collection of small, self-contained [`@expo/ui`](https://docs.expo.dev/versions/latest/sdk/ui/) demos (Expo SDK 57). The whole app is built with Expo UI — a native SwiftUI `List` links to each example.
+A collection of small, self-contained [`@expo/ui`](https://docs.expo.dev/versions/latest/sdk/ui/) demos (Expo SDK 57). The whole app is built with Expo UI.
 
 ## Examples
 
