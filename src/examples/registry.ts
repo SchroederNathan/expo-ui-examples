@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react';
+import type { ImageSourcePropType } from 'react-native';
 import type { SFSymbol } from 'sf-symbols-typescript';
 
 import AnimatedSymbolsScreen from './animated-symbols';
@@ -8,17 +9,28 @@ import LiquidGlassScreen from './liquid-glass';
 import SiriGlowScreen from './siri-glow';
 import MusicPlayerScreen from './music-player';
 import MaterialYouScreen from './material-you';
+import ExpressiveLoadersScreen from './expressive-loaders';
 
-export type Example = {
+type BaseExample = {
   slug: string;
   title: string;
   description: string;
   /** Used by the iOS list. Android-only examples never render it. */
   systemImage: SFSymbol;
-  /** Which list the example appears in. Defaults to `'ios'`. */
-  platform?: 'ios' | 'android';
   screen: ComponentType;
 };
+
+export type AndroidExample = BaseExample & {
+  platform: 'android';
+  /**
+   * Leading icon for the Android list. Material Symbols XML vector drawable —
+   * see `assets/icons/README.md` for how these are generated.
+   */
+  materialIcon: ImageSourcePropType;
+};
+
+/** Which list the example appears in. `platform` defaults to `'ios'`. */
+export type Example = (BaseExample & { platform?: 'ios' }) | AndroidExample;
 
 export const EXAMPLES: Example[] = [
   {
@@ -69,9 +81,21 @@ export const EXAMPLES: Example[] = [
     description: 'Seed a Material 3 palette from a color or the device wallpaper',
     systemImage: 'paintpalette.fill',
     platform: 'android',
+    materialIcon: require('../../assets/icons/palette.xml'),
     screen: MaterialYouScreen,
+  },
+  {
+    slug: 'expressive-loaders',
+    title: 'Expressive Loaders',
+    description: 'Morphing loading indicator and wavy progress driven by a fake install',
+    systemImage: 'arrow.triangle.2.circlepath',
+    platform: 'android',
+    materialIcon: require('../../assets/icons/progress_activity.xml'),
+    screen: ExpressiveLoadersScreen,
   },
 ];
 
 export const IOS_EXAMPLES = EXAMPLES.filter((e) => (e.platform ?? 'ios') === 'ios');
-export const ANDROID_EXAMPLES = EXAMPLES.filter((e) => e.platform === 'android');
+export const ANDROID_EXAMPLES = EXAMPLES.filter(
+  (e): e is AndroidExample => e.platform === 'android'
+);
