@@ -6,6 +6,7 @@ import {
   Surface,
   Text,
   useMaterialColors,
+  type MaterialColors,
 } from '@expo/ui/jetpack-compose';
 import {
   background,
@@ -21,7 +22,12 @@ import {
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { ANDROID_EXAMPLES } from '@/examples/registry';
+import {
+  ANDROID_EXAMPLES,
+  UNIVERSAL_EXAMPLES,
+  type AndroidExample,
+  type UniversalExample,
+} from '@/examples/registry';
 
 const CHEVRON = require('../../assets/icons/chevron_right.xml');
 
@@ -36,12 +42,68 @@ function groupCorners(index: number, count: number) {
   return { topStart: top, topEnd: top, bottomStart: bottom, bottomEnd: bottom };
 }
 
+type RowProps = {
+  example: AndroidExample | UniversalExample;
+  /** Position within its own group, so each group rounds independently. */
+  index: number;
+  count: number;
+  colors: MaterialColors;
+  onPress: () => void;
+};
+
+function ExampleRow({ example, index, count, colors, onPress }: RowProps) {
+  return (
+    <ListItem
+      colors={{
+        containerColor: colors.surfaceContainerHigh,
+        contentColor: colors.onSurface,
+        supportingContentColor: colors.onSurfaceVariant,
+        trailingContentColor: colors.onSurfaceVariant,
+      }}
+      // `clip` before `clickable` so the ripple stays inside the shape.
+      modifiers={[
+        fillMaxWidth(),
+        clip(Shapes.RoundedCorner(groupCorners(index, count))),
+        clickable(onPress),
+      ]}>
+      <ListItem.LeadingContent>
+        {/*
+          Sized through modifiers rather than the `size` prop: the prop is
+          applied ahead of them, so `padding` would eat into the glyph
+          instead of growing the tonal circle around it. 22 + 9 * 2 = 40dp.
+        */}
+        <Icon
+          source={example.materialIcon}
+          tint={colors.onSecondaryContainer}
+          modifiers={[
+            clip(Shapes.Circle),
+            background(colors.secondaryContainer),
+            paddingAll(9),
+            size(22, 22),
+          ]}
+        />
+      </ListItem.LeadingContent>
+      <ListItem.HeadlineContent>
+        <Text style={{ typography: 'titleMedium' }}>{example.title}</Text>
+      </ListItem.HeadlineContent>
+      <ListItem.SupportingContent>
+        <Text style={{ typography: 'bodyMedium' }}>{example.description}</Text>
+      </ListItem.SupportingContent>
+      <ListItem.TrailingContent>
+        <Icon source={CHEVRON} size={20} tint={colors.onSurfaceVariant} />
+      </ListItem.TrailingContent>
+    </ListItem>
+  );
+}
+
 // Android counterpart to the SwiftUI list in `index.tsx`. Built with Jetpack
 // Compose so the example browser is native on both platforms.
 export default function ExampleList() {
   const router = useRouter();
   const colors = useMaterialColors();
   const insets = useSafeAreaInsets();
+
+  const open = (slug: string) => router.push({ pathname: '/[slug]', params: { slug } });
 
   return (
     <Host style={{ flex: 1 }}>
@@ -63,49 +125,34 @@ export default function ExampleList() {
           </Text>
 
           {ANDROID_EXAMPLES.map((example, index) => (
-            <ListItem
+            <ExampleRow
               key={example.slug}
-              colors={{
-                containerColor: colors.surfaceContainerHigh,
-                contentColor: colors.onSurface,
-                supportingContentColor: colors.onSurfaceVariant,
-                trailingContentColor: colors.onSurfaceVariant,
-              }}
-              // `clip` before `clickable` so the ripple stays inside the shape.
-              modifiers={[
-                fillMaxWidth(),
-                clip(Shapes.RoundedCorner(groupCorners(index, ANDROID_EXAMPLES.length))),
-                clickable(() =>
-                  router.push({ pathname: '/[slug]', params: { slug: example.slug } })
-                ),
-              ]}>
-              <ListItem.LeadingContent>
-                {/*
-                  Sized through modifiers rather than the `size` prop: the prop is
-                  applied ahead of them, so `padding` would eat into the glyph
-                  instead of growing the tonal circle around it. 22 + 9 * 2 = 40dp.
-                */}
-                <Icon
-                  source={example.materialIcon}
-                  tint={colors.onSecondaryContainer}
-                  modifiers={[
-                    clip(Shapes.Circle),
-                    background(colors.secondaryContainer),
-                    paddingAll(9),
-                    size(22, 22),
-                  ]}
-                />
-              </ListItem.LeadingContent>
-              <ListItem.HeadlineContent>
-                <Text style={{ typography: 'titleMedium' }}>{example.title}</Text>
-              </ListItem.HeadlineContent>
-              <ListItem.SupportingContent>
-                <Text style={{ typography: 'bodyMedium' }}>{example.description}</Text>
-              </ListItem.SupportingContent>
-              <ListItem.TrailingContent>
-                <Icon source={CHEVRON} size={20} tint={colors.onSurfaceVariant} />
-              </ListItem.TrailingContent>
-            </ListItem>
+              example={example}
+              index={index}
+              count={ANDROID_EXAMPLES.length}
+              colors={colors}
+              onPress={() => open(example.slug)}
+            />
+          ))}
+
+          {/* Universal examples get their own group rather than sitting among the
+              Compose ones: the same screens are listed on iOS too. */}
+          <Text
+            color={colors.onSurfaceVariant}
+            style={{ typography: 'titleSmall' }}
+            modifiers={[padding(4, 28, 4, 12)]}>
+            Universal
+          </Text>
+
+          {UNIVERSAL_EXAMPLES.map((example, index) => (
+            <ExampleRow
+              key={example.slug}
+              example={example}
+              index={index}
+              count={UNIVERSAL_EXAMPLES.length}
+              colors={colors}
+              onPress={() => open(example.slug)}
+            />
           ))}
         </LazyColumn>
       </Surface>

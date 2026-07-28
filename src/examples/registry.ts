@@ -115,8 +115,15 @@ export const EXAMPLES: Example[] = [
   },
 ];
 
-export const IOS_EXAMPLES = EXAMPLES.filter((e) => (e.platform ?? 'ios') !== 'android');
+export const IOS_EXAMPLES = EXAMPLES.filter((e) => (e.platform ?? 'ios') === 'ios');
 export const ANDROID_EXAMPLES = EXAMPLES.filter(
-  (e): e is AndroidExample | UniversalExample =>
-    e.platform === 'android' || e.platform === 'universal'
+  (e): e is AndroidExample => e.platform === 'android'
+);
+
+/**
+ * Listed under their own heading on both home screens rather than mixed into the
+ * platform lists — the point of a universal example is that it isn't either one.
+ */
+export const UNIVERSAL_EXAMPLES = EXAMPLES.filter(
+  (e): e is UniversalExample => e.platform === 'universal'
 );
