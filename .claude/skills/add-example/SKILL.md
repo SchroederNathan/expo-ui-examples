@@ -27,9 +27,13 @@ Replace the placeholder in `src/examples/<slug>/index.tsx`; put extra components
 
 Rules for this repo:
 
-- **Entire UI is @expo/ui**: `Host` from `@expo/ui`, components from `@expo/ui/swift-ui`, modifiers from `@expo/ui/swift-ui/modifiers`. iOS-only is fine here; never import `@expo/ui/jetpack-compose`.
-- Keep the example **self-contained in its folder** so it can be dropped into any SDK 57 project as-is.
-- Confirm APIs against the installed types — `node_modules/@expo/ui/build/swift-ui/<Component>/index.d.ts` — and the versioned docs (https://docs.expo.dev/versions/v57.0.0/), per AGENTS.md.
+- **Entire UI is @expo/ui.** Pick one of three flavors and stay in it:
+  - **iOS-only** — components from `@expo/ui/swift-ui`, modifiers from `@expo/ui/swift-ui/modifiers`. Omit `platform` in the registry.
+  - **Android-only** — components from `@expo/ui/jetpack-compose`, modifiers from `.../modifiers`. Registry needs `platform: 'android'` + a `materialIcon`.
+  - **Universal** — *every* import from the `@expo/ui` root, one tree for both platforms: no `.ios.tsx`/`.android.tsx`, no `Platform.OS`, no `modifiers` escape hatch. Registry needs `platform: 'universal'` plus both `systemImage` and `materialIcon`, and the example must be verified on an iOS simulator **and** an Android emulator.
+- Never mix `@expo/ui/swift-ui` and `@expo/ui/jetpack-compose` in one file — importing either on the wrong platform crashes with "Unable to get view config".
+- Keep the example **self-contained in its folder** so it can be dropped into any SDK 57 project as-is. That includes its icons: example-owned drawables go in `src/examples/<slug>/icons/`, and only the registry row icon lives in `assets/icons/`.
+- Confirm APIs against the installed types — `node_modules/@expo/ui/build/<swift-ui|jetpack-compose|universal>/<Component>/index.d.ts` — and the versioned docs (https://docs.expo.dev/versions/v57.0.0/), per AGENTS.md.
 - React Compiler is enabled: never name a component `Symbol`, and avoid `!` non-null assertions.
 
 ## 3. Verify
@@ -56,3 +60,11 @@ Delete `src/examples/<slug>/` and its import + entry in `registry.ts`. Safe even
 - List rows on the home screen are `Button`s with `buttonStyle('plain')`; without `plain`, everything inside a SwiftUI List button renders tint-blue. Already handled in `src/app/index.tsx` — new examples don't touch it.
 - Typed routes: navigate with the object form `router.push({ pathname: '/[slug]', params: { slug } })`, not a template string.
 - `debugger-reload-metro` can fail against this Expo Go setup ("CDP Page.reload unsupported… /reload 404"). Don't rely on it — Fast Refresh covers JS edits, and re-opening the `exp://` URL does a full reload.
+
+Universal-layer gotchas (all verified against `@expo/ui@57.0.7`):
+
+- **The universal type surface is the _web_ declaration.** `@expo/ui` maps to `build/universal/index.d.ts`, so TypeScript shows you the union of every platform's props — e.g. `Host` accepts `ignoreSafeArea` on Android, where it's a runtime no-op. Type-checking a universal prop proves nothing about whether it does anything; read the `.ios.tsx` / `.android.tsx` source.
+- **`Text` in a `SectionHeader`/`SectionFooter` needs an explicit color.** Compose's `Host` provides no `Surface` and `MaterialTheme` doesn't set `LocalContentColor` (default: black), so slot text is black-on-black in Android dark mode. Text inside rows is fine — Material's `ListItem` supplies content colors.
+- **A `FieldGroup` must be its `Host`'s only child** — it's a `LazyColumn` on Android, and an unweighted child of a Compose `Column` gets an infinite max-height constraint, which throws for a lazy list. Put titles inside it via a section header slot.
+- **`<Spacer />` needs `flexible`** — it's flexible by default on iOS but 0dp on Android. It's also what makes a `Row` fill its width inside a Compose `ListItem`; `style={{ width: '100%' }}` silently doesn't translate on either platform.
+- `Checkbox` renders a SwiftUI `Toggle` on iOS, identical to `Switch` — don't put them in the same section.

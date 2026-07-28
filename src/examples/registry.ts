@@ -10,6 +10,7 @@ import SiriGlowScreen from './siri-glow';
 import MusicPlayerScreen from './music-player';
 import MaterialYouScreen from './material-you';
 import ExpressiveLoadersScreen from './expressive-loaders';
+import UniversalSettingsScreen from './universal-settings';
 
 type BaseExample = {
   slug: string;
@@ -20,8 +21,7 @@ type BaseExample = {
   screen: ComponentType;
 };
 
-export type AndroidExample = BaseExample & {
-  platform: 'android';
+type WithMaterialIcon = {
   /**
    * Leading icon for the Android list. Material Symbols XML vector drawable —
    * see `assets/icons/README.md` for how these are generated.
@@ -29,8 +29,19 @@ export type AndroidExample = BaseExample & {
   materialIcon: ImageSourcePropType;
 };
 
+export type AndroidExample = BaseExample & WithMaterialIcon & { platform: 'android' };
+
+/**
+ * Built with the universal `@expo/ui` layer — one component tree for both
+ * platforms — so it appears in the iOS list and the Android list.
+ */
+export type UniversalExample = BaseExample & WithMaterialIcon & { platform: 'universal' };
+
 /** Which list the example appears in. `platform` defaults to `'ios'`. */
-export type Example = (BaseExample & { platform?: 'ios' }) | AndroidExample;
+export type Example =
+  | (BaseExample & { platform?: 'ios' })
+  | AndroidExample
+  | UniversalExample;
 
 export const EXAMPLES: Example[] = [
   {
@@ -93,9 +104,19 @@ export const EXAMPLES: Example[] = [
     materialIcon: require('../../assets/icons/progress_activity.xml'),
     screen: ExpressiveLoadersScreen,
   },
+  {
+    slug: 'universal-settings',
+    title: 'Universal Settings',
+    description: 'One tree of universal components — a Form on iOS, a Material 3 list on Android',
+    systemImage: 'switch.2',
+    platform: 'universal',
+    materialIcon: require('../../assets/icons/tune.xml'),
+    screen: UniversalSettingsScreen,
+  },
 ];
 
-export const IOS_EXAMPLES = EXAMPLES.filter((e) => (e.platform ?? 'ios') === 'ios');
+export const IOS_EXAMPLES = EXAMPLES.filter((e) => (e.platform ?? 'ios') !== 'android');
 export const ANDROID_EXAMPLES = EXAMPLES.filter(
-  (e): e is AndroidExample => e.platform === 'android'
+  (e): e is AndroidExample | UniversalExample =>
+    e.platform === 'android' || e.platform === 'universal'
 );
