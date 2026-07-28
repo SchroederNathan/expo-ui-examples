@@ -5,7 +5,6 @@ import {
   FieldGroup,
   Host,
   Icon,
-  Picker,
   Row,
   Slider,
   Spacer,
@@ -25,15 +24,18 @@ import { ACCENTS, DEFAULT_TEXT_SIZE, MAX_TEXT_SIZE, MIN_TEXT_SIZE } from './acce
 // arrow keeps pointing left while the RTL switch below is on.
 const BACK = Icon.select({ ios: 'chevron.backward', android: require('./icons/arrow_back.xml') });
 
-type Theme = 'auto' | 'light' | 'dark';
-
 type Props = {
   /** Owned by the route adapter so this tree stays free of navigation. */
   onBack: () => void;
 };
 
 export function UniversalSettings({ onBack }: Props) {
-  const [theme, setTheme] = useState<Theme>('auto');
+  const systemScheme = useColorScheme();
+
+  // Seeded from the device so the screen opens looking like the rest of the OS,
+  // then owned by the switch below — `colorScheme` is passed explicitly either way
+  // so the toggle always visibly does something, even on an already-dark device.
+  const [dark, setDark] = useState(systemScheme === 'dark');
   const [accent, setAccent] = useState(ACCENTS[0].color);
   const [textSize, setTextSize] = useState(DEFAULT_TEXT_SIZE);
   const [rightToLeft, setRightToLeft] = useState(false);
@@ -42,18 +44,16 @@ export function UniversalSettings({ onBack }: Props) {
   const [crashReports, setCrashReports] = useState(true);
 
   const insets = useSafeAreaInsets();
-  const systemScheme = useColorScheme();
-  const isDark = (theme === 'auto' ? systemScheme : theme) === 'dark';
 
   // Header and footer slots render outside the row containers — on Android that
   // means outside the Compose `ListItem` that provides `LocalContentColor`, whose
   // default is black. Text in those slots needs an explicit color; text inside
   // rows inherits the right one on both platforms.
-  const titleColor = isDark ? '#FFFFFF' : '#000000';
-  const captionColor = isDark ? '#98989F' : '#6C6C70';
+  const titleColor = dark ? '#FFFFFF' : '#000000';
+  const captionColor = dark ? '#98989F' : '#6C6C70';
 
   const reset = () => {
-    setTheme('auto');
+    setDark(systemScheme === 'dark');
     setAccent(ACCENTS[0].color);
     setTextSize(DEFAULT_TEXT_SIZE);
     setRightToLeft(false);
@@ -64,7 +64,7 @@ export function UniversalSettings({ onBack }: Props) {
 
   return (
     <>
-      <StatusBar style={isDark ? 'light' : 'dark'} />
+      <StatusBar style={dark ? 'light' : 'dark'} />
       <Host
         // Remounting on a direction change is deliberate. Flipping
         // `layoutDirection` on a live Host leaves the SwiftUI subtree
@@ -72,7 +72,7 @@ export function UniversalSettings({ onBack }: Props) {
         // responding, so there's no way back. A fresh Host each way is reliable.
         key={rightToLeft ? 'rtl' : 'ltr'}
         style={{ flex: 1 }}
-        colorScheme={theme === 'auto' ? undefined : theme}
+        colorScheme={dark ? 'dark' : 'light'}
         seedColor={accent}
         layoutDirection={rightToLeft ? 'rightToLeft' : 'leftToRight'}
         // SwiftUI insets its content for the safe area and Compose doesn't. Opting
@@ -98,23 +98,13 @@ export function UniversalSettings({ onBack }: Props) {
               </Row>
             </FieldGroup.SectionHeader>
 
-            {/* `Picker` has no label prop, so a labelled row is composed by hand. The
-                flexible Spacer is what makes the Row fill its width on Android.
-                `appearance` only reaches iOS: Material 3 has no wheel picker, so
-                Android always gets an exposed dropdown menu — a wider, taller
-                control than the iOS menu button, which is why this label is short. */}
-            <Row alignment="center">
-              <Text>Theme</Text>
-              <Spacer flexible />
-              <Picker
-                selectedValue={theme}
-                onValueChange={(value) => setTheme(value as Theme)}
-                appearance="menu">
-                <Picker.Item label="System" value="auto" />
-                <Picker.Item label="Light" value="light" />
-                <Picker.Item label="Dark" value="dark" />
-              </Picker>
-            </Row>
+            {/* No `Picker` here. It's the universal component for a choice like
+                this, but the two platforms render it too differently to belong in
+                an example about writing one tree: iOS gets a compact menu button,
+                Android a Material exposed dropdown whose anchor is a filled
+                `TextField` with no caret, and `PickerProps` exposes no `style` to
+                close the gap. A `Switch` says the same thing identically on both. */}
+            <Switch label="Dark appearance" value={dark} onValueChange={setDark} />
 
             <Column spacing={10}>
               <Text>Accent</Text>
