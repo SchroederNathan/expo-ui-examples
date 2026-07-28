@@ -6,6 +6,7 @@ import NumericTransitionsScreen from './numeric-transitions';
 import SwiftChartsScreen from './swift-charts';
 import LiquidGlassScreen from './liquid-glass';
 import SiriGlowScreen from './siri-glow';
+import MusicPlayerScreen from './music-player';
 
 export type Example = {
   slug: string;
@@ -50,5 +51,12 @@ export const EXAMPLES: Example[] = [
     description: 'Apple Intelligence-style edge glow that hugs the device bezel with ConcentricRectangle',
     systemImage: 'sparkles',
     screen: SiriGlowScreen,
+  },
+  {
+    slug: 'music-player',
+    title: 'Music Player',
+    description: 'Mini-player that drags up into a full-screen now-playing sheet',
+    systemImage: 'music.note',
+    screen: MusicPlayerScreen,
   },
 ];
