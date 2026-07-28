@@ -7,12 +7,16 @@ import SwiftChartsScreen from './swift-charts';
 import LiquidGlassScreen from './liquid-glass';
 import SiriGlowScreen from './siri-glow';
 import MusicPlayerScreen from './music-player';
+import MaterialYouScreen from './material-you';
 
 export type Example = {
   slug: string;
   title: string;
   description: string;
+  /** Used by the iOS list. Android-only examples never render it. */
   systemImage: SFSymbol;
+  /** Which list the example appears in. Defaults to `'ios'`. */
+  platform?: 'ios' | 'android';
   screen: ComponentType;
 };
 
@@ -59,4 +63,15 @@ export const EXAMPLES: Example[] = [
     systemImage: 'music.note',
     screen: MusicPlayerScreen,
   },
+  {
+    slug: 'material-you',
+    title: 'Material You',
+    description: 'Seed a Material 3 palette from a color or the device wallpaper',
+    systemImage: 'paintpalette.fill',
+    platform: 'android',
+    screen: MaterialYouScreen,
+  },
 ];
+
+export const IOS_EXAMPLES = EXAMPLES.filter((e) => (e.platform ?? 'ios') === 'ios');
+export const ANDROID_EXAMPLES = EXAMPLES.filter((e) => e.platform === 'android');

@@ -11,9 +11,15 @@ A collection of small, self-contained [`@expo/ui`](https://docs.expo.dev/version
 | [Swift Charts](src/examples/swift-charts) | Every native `Chart` type animating on one shared data set |
 | [Liquid Glass](src/examples/liquid-glass) | `GlassEffectContainer` morphing orbs, tinted glass, clear/regular variants (iOS 26+) |
 
-Each example lives in its own folder under `src/examples/` with all of its components, so a demo can be dropped into any Expo SDK 57 project as-is. New examples register themselves in [`src/examples/registry.ts`](src/examples/registry.ts).
+### Android
 
-> iOS only — the examples use `@expo/ui/swift-ui` (SF Symbols, Swift Charts, glass buttons). Requires iOS 17+.
+| Example | What it shows |
+| --- | --- |
+| [Material You](src/examples/material-you) | Seed a Material 3 palette from a color or the device wallpaper with `useMaterialColors` |
+
+Each example lives in its own folder under `src/examples/` with all of its components, so a demo can be dropped into any Expo SDK 57 project as-is. New examples register themselves in [`src/examples/registry.ts`](src/examples/registry.ts), where `platform` decides which list they appear in.
+
+> The iOS examples use `@expo/ui/swift-ui` (SF Symbols, Swift Charts, glass buttons) and need iOS 17+. The Android examples use `@expo/ui/jetpack-compose`; wallpaper-derived colors need Android 12+, and everything else falls back to the Material 3 baseline.
 
 ## Get started
 
@@ -27,7 +33,30 @@ Each example lives in its own folder under `src/examples/` with all of its compo
 
    ```bash
    bun run ios
+   # or
+   bun run android
    ```
+
+Both scripts run a native build (`expo run:*`) — `@expo/ui` renders real SwiftUI and Jetpack Compose views, so Expo Go isn't enough.
+
+### Demoing Material You
+
+Driving the wallpaper picker by hand is fiddly on an emulator. Android 12+ keeps the
+Material You source color in `Settings.Secure`, so you can set it directly:
+
+```bash
+adb shell "settings put secure theme_customization_overlay_packages \
+  '{\"android.theme.customization.system_palette\":\"FF1B6E00\",\
+    \"android.theme.customization.color_source\":\"preset\",\
+    \"android.theme.customization.theme_style\":\"TONAL_SPOT\"}'"
+
+# back to the real wallpaper palette
+adb shell "settings delete secure theme_customization_overlay_packages"
+```
+
+Compose components retheme immediately. Colors read in JS through `useMaterialColors`
+do not — the hook reads the palette per render but never subscribes to system changes —
+so the example re-renders when the app returns to the foreground to keep both in sync.
 
 ## Structure
 

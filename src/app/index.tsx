@@ -3,7 +3,7 @@ import { Button, HStack, Image, Label, List, Section, Spacer, Text, VStack } fro
 import { buttonStyle, font, foregroundStyle } from '@expo/ui/swift-ui/modifiers';
 import { useRouter } from 'expo-router';
 
-import { EXAMPLES } from '@/examples/registry';
+import { IOS_EXAMPLES } from '@/examples/registry';
 
 export default function ExampleList() {
   const router = useRouter();
@@ -12,7 +12,7 @@ export default function ExampleList() {
     <Host style={{ flex: 1 }}>
       <List>
         <Section>
-          {EXAMPLES.map((example) => (
+          {IOS_EXAMPLES.map((example) => (
             <Button
               key={example.slug}
               onPress={() =>
