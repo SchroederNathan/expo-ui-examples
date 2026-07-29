@@ -1,20 +1,20 @@
-import { Host } from '@expo/ui';
-import { Text, VStack } from '@expo/ui/swift-ui';
-import { font, foregroundStyle } from '@expo/ui/swift-ui/modifiers';
+import { Stack, useRouter } from 'expo-router';
 
+import { UniversalSettings } from './universal-settings';
+
+// Universal Settings — one component tree, imported entirely from the `@expo/ui`
+// root, that renders a SwiftUI Form on iOS and a Material 3 grouped list on Android.
+// The theme, accent, text-size and layout-direction controls all write back to the
+// Host, so the screen restyles itself as you use it. The header is hidden on both
+// platforms so the Host owns the full screen and a forced color scheme reaches the
+// title too; back is the chevron, the iOS edge swipe, or the Android system back.
 export default function UniversalSettingsScreen() {
+  const router = useRouter();
+
   return (
-    <Host style={{ flex: 1 }}>
-      <VStack spacing={12}>
-        <Text modifiers={[font({ textStyle: 'headline' })]}>Universal Settings</Text>
-        <Text
-          modifiers={[
-            font({ textStyle: 'footnote' }),
-            foregroundStyle({ type: 'hierarchical', style: 'secondary' }),
-          ]}>
-          Build the example here.
-        </Text>
-      </VStack>
-    </Host>
+    <>
+      <Stack.Screen options={{ headerShown: false }} />
+      <UniversalSettings onBack={() => router.back()} />
+    </>
   );
 }

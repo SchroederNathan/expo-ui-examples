@@ -16,16 +16,29 @@ function shiftY(pathData, dy) {
   let cmd = null;
   let args = [];
 
+  let isFirst = true;
+
   const flush = () => {
     if (!cmd) return;
     const key = cmd.toUpperCase();
     const stride = { M: 2, L: 2, T: 2, V: 1, H: 1, C: 6, S: 4, Q: 4, A: 7, Z: 0 }[key];
     const yIdx = cmd === key ? Y_INDICES[key] : []; // only absolute commands shift
     if (stride > 0) {
-      for (let i = 0; i < args.length; i += stride) {
-        for (const j of yIdx) args[i + j] = +(args[i + j] + dy).toFixed(3);
+      if (isFirst && cmd === 'm') {
+        // A leading `m` is absolute per the SVG spec ("If a relative moveto
+        // appears as the first element of the path, it is treated as a pair of
+        // absolute coordinates"), so its first pair still needs the shift — only
+        // the implicit linetos that follow are true offsets. Without this, any
+        // symbol whose path starts lowercase lands a full viewport too high and
+        // renders as nothing at all.
+        args[1] = +(args[1] + dy).toFixed(3);
+      } else {
+        for (let i = 0; i < args.length; i += stride) {
+          for (const j of yIdx) args[i + j] = +(args[i + j] + dy).toFixed(3);
+        }
       }
     }
+    isFirst = false;
     // An implicit-lineto run after `M` keeps the moveto's Y indices, which is
     // what the M entry already encodes, so no special casing is needed.
     out.push(cmd + args.join(' '));
