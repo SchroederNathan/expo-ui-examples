@@ -10,12 +10,15 @@ A collection of small, self-contained [`@expo/ui`](https://docs.expo.dev/version
 | [Numeric Transitions](src/examples/numeric-transitions) | Counter with `numericText` content transitions and glass buttons |
 | [Swift Charts](src/examples/swift-charts) | Every native `Chart` type animating on one shared data set |
 | [Liquid Glass](src/examples/liquid-glass) | `GlassEffectContainer` morphing orbs, tinted glass, clear/regular variants (iOS 26+) |
+| [Siri Glow](src/examples/siri-glow) | Apple Intelligence-style edge glow that hugs the bezel with `ConcentricRectangle` (iOS 26+) |
+| [Music Player](src/examples/music-player) | Mini-player parked at a `BottomSheet` detent that drags up into a full-screen now-playing view |
 
 ### Android
 
 | Example | What it shows |
 | --- | --- |
 | [Material You](src/examples/material-you) | Seed a Material 3 palette from a color or the device wallpaper with `useMaterialColors` |
+| [Expressive Loaders](src/examples/expressive-loaders) | Morphing `LoadingIndicator` and wavy progress indicators driven by a fake install |
 
 Each example lives in its own folder under `src/examples/` with all of its components, so a demo can be dropped into any Expo SDK 57 project as-is. New examples register themselves in [`src/examples/registry.ts`](src/examples/registry.ts), where `platform` decides which list they appear in.
 
