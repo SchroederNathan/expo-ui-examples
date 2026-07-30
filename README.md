@@ -12,6 +12,7 @@ A collection of small, self-contained [`@expo/ui`](https://docs.expo.dev/version
 | [Liquid Glass](src/examples/liquid-glass) | `GlassEffectContainer` morphing orbs, tinted glass, clear/regular variants (iOS 26+) |
 | [Siri Glow](src/examples/siri-glow) | Apple Intelligence-style edge glow that hugs the bezel with `ConcentricRectangle` (iOS 26+) |
 | [Music Player](src/examples/music-player) | Mini-player parked at a `BottomSheet` detent that drags up into a full-screen now-playing view |
+| [Rich Text Editor](src/examples/rich-text-editor) | Glass format bar that rides the keyboard's safe area, wrapping the selection as you type (iOS 26+) |
 
 ### Android
 
