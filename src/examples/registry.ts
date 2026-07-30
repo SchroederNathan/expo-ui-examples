@@ -8,6 +8,7 @@ import SwiftChartsScreen from './swift-charts';
 import LiquidGlassScreen from './liquid-glass';
 import SiriGlowScreen from './siri-glow';
 import MusicPlayerScreen from './music-player';
+import MarkdownScreen from './markdown';
 import MaterialYouScreen from './material-you';
 import ExpressiveLoadersScreen from './expressive-loaders';
 import UniversalSettingsScreen from './universal-settings';
@@ -85,6 +86,13 @@ export const EXAMPLES: Example[] = [
     description: 'Mini-player that drags up into a full-screen now-playing sheet',
     systemImage: 'music.note',
     screen: MusicPlayerScreen,
+  },
+  {
+    slug: 'markdown',
+    title: 'Markdown',
+    description: 'Type markdown and watch SwiftUI Text render it live',
+    systemImage: 'textformat',
+    screen: MarkdownScreen,
   },
   {
     slug: 'material-you',
