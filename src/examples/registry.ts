@@ -90,7 +90,7 @@ export const EXAMPLES: Example[] = [
   {
     slug: 'rich-text-editor',
     title: 'Rich Text Editor',
-    description: 'Glass formatting bar that rides above the keyboard',
+    description: 'Segmented formatting bar that rides above the keyboard',
     systemImage: 'square.and.pencil',
     screen: RichTextEditorScreen,
   },

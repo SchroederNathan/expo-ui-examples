@@ -1,75 +1,66 @@
-import { Button, GlassEffectContainer, HStack, Image } from '@expo/ui/swift-ui';
-import {
-  buttonBorderShape,
-  buttonStyle,
-  controlSize,
-  frame,
-  padding,
-} from '@expo/ui/swift-ui/modifiers';
+import { Image, Picker } from '@expo/ui/swift-ui';
+import { pickerStyle, tag } from '@expo/ui/swift-ui/modifiers';
 import type { SFSymbol } from 'sf-symbols-typescript';
+
+import { useState } from 'react';
 
 import type { RichText } from './use-rich-text';
 
 type FormatBarProps = {
   state: RichText;
-  /** Drops the keyboard. The field has no other way down: `axis="vertical"` means
-   *  the return key inserts a newline instead of submitting. */
-  onDismiss: () => void;
 };
 
 type Format = {
+  /** The segment's `tag`, and what `onSelectionChange` reports back. */
+  id: string;
   symbol: SFSymbol;
-  /** Wrapped around the selection on both sides. */
-  delimiter: string;
-  /** Placeholder inserted between the delimiters when nothing is selected. */
-  word: string;
+  apply: (state: RichText) => void;
 };
 
 const FORMATS: Format[] = [
-  { symbol: 'bold', delimiter: '**', word: 'bold' },
-  { symbol: 'italic', delimiter: '*', word: 'italic' },
-  { symbol: 'strikethrough', delimiter: '~~', word: 'strike' },
-  { symbol: 'chevron.left.forwardslash.chevron.right', delimiter: '`', word: 'code' },
+  { id: 'bold', symbol: 'bold', apply: (state) => state.wrap('**', 'bold') },
+  { id: 'italic', symbol: 'italic', apply: (state) => state.wrap('*', 'italic') },
+  { id: 'strike', symbol: 'strikethrough', apply: (state) => state.wrap('~~', 'strike') },
+  {
+    id: 'code',
+    symbol: 'chevron.left.forwardslash.chevron.right',
+    apply: (state) => state.wrap('`', 'code'),
+  },
+  { id: 'link', symbol: 'link', apply: (state) => state.link() },
 ];
 
-// The formatting bar. `buttonStyle('glass')` is what makes each button Liquid
-// Glass; the GlassEffectContainer lets neighbours blend rather than each carrying
-// its own separate pane. `'glass'` needs iOS 26+ — verified on 26.5 only, so treat
-// the look below that as unknown.
-//
-// Glass refracts what is behind it, so the bar reads as plain circles on a flat
-// canvas. That is what `CanvasWash` is for.
-export function FormatBar({ state, onDismiss }: FormatBarProps) {
-  const glass = [buttonStyle('glass'), buttonBorderShape('circle'), controlSize('large')];
+/** Two tags no segment carries, so neither draws a highlight. See `selection` below. */
+const NOTHING = ['nothing-a', 'nothing-b'];
+
+// The formatting bar: a segmented `Picker` of formats. `pickerStyle('segmented')` is
+// what makes the picker a segmented control; `label` is required even though the
+// segmented style never draws it — without a label the native view renders nothing
+// at all.
+export function FormatBar({ state }: FormatBarProps) {
+  const [taps, setTaps] = useState(0);
+
+  // A segmented control selects; these segments act, so the tapped one has to give
+  // its highlight back. It cannot simply be told "select nothing": native copies
+  // `selection` into the picker only when the prop *changes*, so a constant value
+  // never lands. Hence two of them, alternating on every tap.
+  //
+  // Leaving the highlight is not an option either — it would claim an active
+  // format, and a second tap on an already-selected segment is not a selection
+  // change, so that format would quietly stop firing.
+  const selection = NOTHING[taps % NOTHING.length];
 
   return (
-    <GlassEffectContainer spacing={20}>
-      {/* Clears the home indicator with the keyboard down, and leaves a little air
-          above the keyboard with it up. */}
-      <HStack spacing={10} modifiers={[padding({ bottom: 10 })]}>
-        {FORMATS.map((format) => (
-          <Button
-            key={format.symbol}
-            onPress={() => state.wrap(format.delimiter, format.word)}
-            modifiers={glass}>
-            <Image
-              systemName={format.symbol}
-              size={17}
-              modifiers={[frame({ width: 22, height: 22 })]}
-            />
-          </Button>
-        ))}
-        <Button onPress={state.link} modifiers={glass}>
-          <Image systemName="link" size={17} modifiers={[frame({ width: 22, height: 22 })]} />
-        </Button>
-        <Button onPress={onDismiss} modifiers={glass}>
-          <Image
-            systemName="keyboard.chevron.compact.down"
-            size={17}
-            modifiers={[frame({ width: 22, height: 22 })]}
-          />
-        </Button>
-      </HStack>
-    </GlassEffectContainer>
+    <Picker
+      label="Format"
+      selection={selection}
+      onSelectionChange={(id) => {
+        FORMATS.find((format) => format.id === id)?.apply(state);
+        setTaps((count) => count + 1);
+      }}
+      modifiers={[pickerStyle('segmented')]}>
+      {FORMATS.map((format) => (
+        <Image key={format.id} systemName={format.symbol} size={15} modifiers={[tag(format.id)]} />
+      ))}
+    </Picker>
   );
 }
