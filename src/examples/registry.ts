@@ -12,6 +12,7 @@ import RichTextEditorScreen from './rich-text-editor';
 import MaterialYouScreen from './material-you';
 import ExpressiveLoadersScreen from './expressive-loaders';
 import UniversalSettingsScreen from './universal-settings';
+import AppleZoomScreen from './apple-zoom';
 
 type BaseExample = {
   slug: string;
@@ -93,6 +94,13 @@ export const EXAMPLES: Example[] = [
     description: 'Segmented formatting bar that rides above the keyboard',
     systemImage: 'square.and.pencil',
     screen: RichTextEditorScreen,
+  },
+  {
+    slug: 'apple-zoom',
+    title: 'Apple Zoom',
+    description: 'Thumbnails that zoom into a full-screen photo with the iOS 18 transition',
+    systemImage: 'photo.on.rectangle.angled',
+    screen: AppleZoomScreen,
   },
   {
     slug: 'material-you',
