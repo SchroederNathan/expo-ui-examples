@@ -36,6 +36,22 @@ Rules for this repo:
 - Confirm APIs against the installed types — `node_modules/@expo/ui/build/<swift-ui|jetpack-compose|universal>/<Component>/index.d.ts` — and the versioned docs (https://docs.expo.dev/versions/v57.0.0/), per AGENTS.md.
 - React Compiler is enabled: never name a component `Symbol`, and avoid `!` non-null assertions.
 
+### The two exceptions, both proven by `src/examples/apple-zoom/`
+
+An example that demos a **navigation transition** may break the two rules above, because the
+transition belongs to Expo Router and to UIKit, not to `@expo/ui`:
+
+- **It may own route files under `src/app/<slug>/`.** A zoom transition needs a real push onto
+  the Stack, so the destination must be a route file. Keep it to a one-line
+  `export { default } from '@/examples/<slug>/<screen>';` and leave the screen in the example
+  folder, so the example is still one self-contained directory. A folder named after the slug
+  does not shadow `[slug].tsx`: `/<slug>` (one segment) still resolves to the registry example,
+  `/<slug>/1` (two segments) to the new route. Typed routes only accept the new href after the
+  dev server regenerates `.expo/types` — run `bunx expo start` once, or `npx tsc --noEmit` fails.
+- **Its UI may be plain React Native.** UIKit snapshots the zoomed view during the transition,
+  and an `@expo/ui` `Host` is a native SwiftUI view that may not snapshot as expected. Use RN
+  views plus `expo-image` for anything the transition animates.
+
 ## 3. Verify
 
 ```bash
