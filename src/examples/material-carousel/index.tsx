@@ -30,8 +30,8 @@ export default function MaterialCarouselScreen() {
           <Section
             colors={colors}
             title="Hero"
-            caption="One centered item between two small peeks — singleAdvance snaps a page at a time">
-            <HorizontalCenteredHeroCarousel itemSpacing={8} flingBehavior="singleAdvance">
+            caption="One centered item between two small peeks — snaps a page at a time by default">
+            <HorizontalCenteredHeroCarousel>
               {PHOTOS.map((p) => (
                 <PhotoCard key={p.id} photo={p} cardHeight={340} />
               ))}
@@ -42,10 +42,7 @@ export default function MaterialCarouselScreen() {
             colors={colors}
             title="Multi-browse"
             caption="A large item with smaller ones peeking in, so you can see what comes next">
-            <HorizontalMultiBrowseCarousel
-              preferredItemWidth={240}
-              itemSpacing={8}
-              flingBehavior="singleAdvance">
+            <HorizontalMultiBrowseCarousel preferredItemWidth={240}>
               {PHOTOS.map((p) => (
                 <PhotoCard key={p.id} photo={p} cardHeight={240} />
               ))}
@@ -55,8 +52,8 @@ export default function MaterialCarouselScreen() {
           <Section
             colors={colors}
             title="Uncontained"
-            caption="Fixed-width items with free-form scrolling, no snapping">
-            <HorizontalUncontainedCarousel itemWidth={172} itemSpacing={8}>
+            caption="Fixed-width items with free-form scrolling — the only style that defaults to no snapping">
+            <HorizontalUncontainedCarousel itemWidth={172}>
               {PHOTOS.map((p) => (
                 <PhotoCard key={p.id} photo={p} cardHeight={200} />
               ))}
