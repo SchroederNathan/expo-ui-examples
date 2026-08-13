@@ -9,7 +9,7 @@ import { HealthSyncSheet } from './sheet-content';
 // except two deliberate escape hatches: an RNHostView island for the animated
 // app icons (the universal layer has no Image or animation surface) and a
 // platform-split Continue button (glass is SwiftUI-only).
-export default function HealthSyncSheetScreen() {
+export default function BottomSheetScreen() {
   const [isPresented, setIsPresented] = useState(false);
   const dark = useColorScheme() === 'dark';
 
