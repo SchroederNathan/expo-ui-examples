@@ -14,6 +14,7 @@ import ExpressiveLoadersScreen from './expressive-loaders';
 import UniversalSettingsScreen from './universal-settings';
 import AppleZoomScreen from './apple-zoom';
 import MaterialCarouselScreen from './material-carousel';
+import HealthSyncSheetScreen from './health-sync-sheet';
 
 type BaseExample = {
   slug: string;
@@ -138,6 +139,15 @@ export const EXAMPLES: Example[] = [
     platform: 'android',
     materialIcon: require('../../assets/icons/view_carousel.xml'),
     screen: MaterialCarouselScreen,
+  },
+  {
+    slug: 'health-sync-sheet',
+    title: 'Health Sync Sheet',
+    description: 'A universal bottom sheet that grows to fit its content',
+    systemImage: 'heart.text.square',
+    platform: 'universal',
+    materialIcon: require('../../assets/icons/ecg_heart.xml'),
+    screen: HealthSyncSheetScreen,
   },
 ];
 
