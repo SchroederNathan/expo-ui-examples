@@ -13,6 +13,7 @@ import MaterialYouScreen from './material-you';
 import ExpressiveLoadersScreen from './expressive-loaders';
 import UniversalSettingsScreen from './universal-settings';
 import AppleZoomScreen from './apple-zoom';
+import MaterialCarouselScreen from './material-carousel';
 
 type BaseExample = {
   slug: string;
@@ -128,6 +129,15 @@ export const EXAMPLES: Example[] = [
     platform: 'universal',
     materialIcon: require('../../assets/icons/tune.xml'),
     screen: UniversalSettingsScreen,
+  },
+  {
+    slug: 'material-carousel',
+    title: 'Material 3 Carousel',
+    description: 'Hero, multi-browse, and uncontained carousels browsing one photo set',
+    systemImage: 'rectangle.stack',
+    platform: 'android',
+    materialIcon: require('../../assets/icons/view_carousel.xml'),
+    screen: MaterialCarouselScreen,
   },
 ];
 
