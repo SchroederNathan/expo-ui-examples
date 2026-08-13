@@ -1,6 +1,6 @@
 # Expo UI Examples
 
-A collection of small, self-contained [`@expo/ui`](https://docs.expo.dev/versions/latest/sdk/ui/) demos (Expo SDK 57). The whole app is built with Expo UI.
+A collection of small, self-contained [`@expo/ui`](https://docs.expo.dev/versions/v57.0.0/sdk/ui/) demos (Expo SDK 57). The whole app is built with Expo UI.
 
 ## Examples
 
@@ -21,12 +21,14 @@ A collection of small, self-contained [`@expo/ui`](https://docs.expo.dev/version
 | --- | --- |
 | [Material You](src/examples/material-you) | Seed a Material 3 palette from a color or the device wallpaper with `useMaterialColors` |
 | [Expressive Loaders](src/examples/expressive-loaders) | Morphing `LoadingIndicator` and wavy progress indicators driven by a fake install |
+| [Material 3 Carousel](src/examples/material-carousel) | Hero, multi-browse, and uncontained native Compose carousels browsing one photo set |
 
 ### Universal
 
 | Example | What it shows |
 | --- | --- |
 | [Universal Settings](src/examples/universal-settings) | One tree of universal components rendering as a SwiftUI `Form` and a Material 3 grouped list, with every control wired back into `Host` |
+| [Bottom Sheet](src/examples/bottom-sheet) | A universal `BottomSheet` that fits its content and grows as additional rows are revealed |
 
 Each example lives in its own folder under `src/examples/` with all of its components, so a demo can be dropped into any Expo SDK 57 project as-is. New examples register themselves in [`src/examples/registry.ts`](src/examples/registry.ts), where `platform` decides which list they appear in — `'universal'` puts an example in both.
 
