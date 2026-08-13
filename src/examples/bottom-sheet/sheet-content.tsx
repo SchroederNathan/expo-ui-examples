@@ -43,9 +43,6 @@ export function HealthSyncSheet({ isPresented, onDismiss }: Props) {
 
   return (
     <BottomSheet isPresented={isPresented} onDismiss={onDismiss}>
-      {/* BottomSheet already applies both its content inset and the platform's
-          bottom safe area. Adding another bottom inset creates a double gap on
-          iOS, so the action intentionally sits at the end of this content. */}
       <Column spacing={12} style={{ paddingTop: 8 }}>
         <RNHostView matchContents>
           <IconStack synced={visibleRows > 0} />
@@ -55,10 +52,6 @@ export function HealthSyncSheet({ isPresented, onDismiss }: Props) {
           style={{ paddingTop: 8 }}>
           Apple Health Sync
         </Text>
-        {/* Fixed height keeps this text rigid: fitToContents measures content
-            inside the sheet's current detent, and while the height animates
-            SwiftUI would rather squash flexible text than overflow it.
-            The same value is plain dp on Android. */}
         <Text textStyle={{ fontSize: 15, color: captionColor }} style={{ height: 40 }}>
           Connect with Apple Health so both apps can gossip about your workouts behind your back.
         </Text>
