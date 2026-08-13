@@ -4,7 +4,7 @@ import { useColorScheme } from 'react-native';
 
 import { HealthSyncSheet } from './sheet-content';
 
-// Health Sync Sheet — a universal BottomSheet that fits its content and grows
+// Bottom Sheet — a universal BottomSheet that fits its content and grows
 // when Continue reveals more of it. Everything inside is one `@expo/ui` tree
 // except two deliberate escape hatches: an RNHostView island for the animated
 // app icons (the universal layer has no Image or animation surface) and a

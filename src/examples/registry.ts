@@ -142,7 +142,7 @@ export const EXAMPLES: Example[] = [
   },
   {
     slug: 'health-sync-sheet',
-    title: 'Health Sync Sheet',
+    title: 'Bottom Sheet',
     description: 'A universal bottom sheet that grows to fit its content',
     systemImage: 'heart.text.square',
     platform: 'universal',
