@@ -5,15 +5,52 @@ import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-na
 
 import { TIMING } from './timing';
 
-const UPLOAD = Icon.select({ ios: 'square.and.arrow.up', android: require('./icons/upload.xml') });
-const WATCH = Icon.select({ ios: 'applewatch', android: require('./icons/watch.xml') });
+const ROWS = [
+  {
+    icon: Icon.select({ ios: 'square.and.arrow.up', android: require('./icons/upload.xml') }),
+    text: 'Every workout you record here is bragged about to Apple Health.',
+  },
+  {
+    icon: Icon.select({ ios: 'applewatch', android: require('./icons/watch.xml') }),
+    text: 'Your Apple Watch tattles on your heart rate in real time.',
+  },
+  {
+    icon: Icon.select({ ios: 'flame', android: require('./icons/local_fire_department.xml') }),
+    text: 'Calories burned scrolling this sheet count. All twelve of them.',
+  },
+  {
+    icon: Icon.select({ ios: 'figure.walk', android: require('./icons/steps.xml') }),
+    text: "Steps to the fridge sync as cardio. We don't judge.",
+  },
+  {
+    icon: Icon.select({ ios: 'moon.zzz', android: require('./icons/bedtime.xml') }),
+    text: 'Naps you deny taking are logged as sleep data anyway.',
+  },
+  {
+    icon: Icon.select({ ios: 'drop', android: require('./icons/water_drop.xml') }),
+    text: 'Hydration reminders every hour, on the hour, forever.',
+  },
+  {
+    icon: Icon.select({ ios: 'trophy', android: require('./icons/trophy.xml') }),
+    text: 'Achievements unlock for workouts longer than this sheet.',
+  },
+  {
+    icon: Icon.select({ ios: 'heart', android: require('./icons/favorite.xml') }),
+    text: 'Your resting heart rate is shared. Try to look calm.',
+  },
+];
+
+export const ROW_COUNT = ROWS.length;
 
 const ROW_HEIGHT = 44;
 const ROW_GAP = 12;
 // The section gap above the rows rides inside the animated height, so the
 // collapsed island adds no dead space between description and button.
 const TOP_GAP = 12;
-const REVEAL_HEIGHT = TOP_GAP + ROW_HEIGHT * 2 + ROW_GAP;
+
+function revealHeightFor(count: number) {
+  return count === 0 ? 0 : TOP_GAP + count * ROW_HEIGHT + (count - 1) * ROW_GAP;
+}
 
 // The sheet only animates its growth if the content height itself animates:
 // iOS fitToContents snaps its detent to a newly measured size, and the M3
@@ -22,18 +59,19 @@ const REVEAL_HEIGHT = TOP_GAP + ROW_HEIGHT * 2 + ROW_GAP;
 // platforms a continuous stream of content sizes — that is what makes the
 // sheet visibly grow. The row icons stay universal Icon pairs by nesting a
 // tiny Host per row back inside the island.
-export function RowsReveal({ synced }: { synced: boolean }) {
-  const progress = useSharedValue(0);
+export function RowsReveal({ count }: { count: number }) {
+  const height = useSharedValue(0);
   const dark = useColorScheme() === 'dark';
   const { width } = useWindowDimensions();
 
   useEffect(() => {
-    progress.set(withTiming(synced ? 1 : 0, TIMING));
-  }, [synced, progress]);
+    height.set(withTiming(revealHeightFor(count), TIMING));
+  }, [count, height]);
 
+  // Rows below the animated clip simply slide out from under it as the
+  // height grows — every Continue press reveals the next batch.
   const revealStyle = useAnimatedStyle(() => ({
-    height: progress.get() * REVEAL_HEIGHT,
-    opacity: progress.get(),
+    height: height.get(),
   }));
 
   const iconColor = dark ? '#98989F' : '#6C6C70';
@@ -44,18 +82,15 @@ export function RowsReveal({ synced }: { synced: boolean }) {
     // width: the sheet is screen-wide on phones and both platforms already
     // inset its content by 16.
     <Animated.View style={[styles.reveal, { width: width - 32 }, revealStyle]}>
-      <Row
-        icon={UPLOAD}
-        iconColor={iconColor}
-        textColor={textColor}
-        text="Workouts you record here are saved to Apple Health."
-      />
-      <Row
-        icon={WATCH}
-        iconColor={iconColor}
-        textColor={textColor}
-        text="Runs from Apple Watch and other apps appear here."
-      />
+      {ROWS.map((row) => (
+        <Row
+          key={row.text}
+          icon={row.icon}
+          iconColor={iconColor}
+          textColor={textColor}
+          text={row.text}
+        />
+      ))}
     </Animated.View>
   );
 }

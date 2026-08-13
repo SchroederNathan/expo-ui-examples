@@ -18,6 +18,13 @@ const HEALTH_ICON = require('@/assets/images/apple-health-icon.png');
 const ICON_SIZE = 64;
 // How far the Health icon slides out from behind the app icon.
 const TRAVEL = 56;
+// Breathing room for the rotated icons' corners: the Compose host clips the
+// island to its bounds, so they need space to swing inside it instead of
+// getting shaved off. The left edge only gets a sliver — the stack has to
+// stay visually flush with the title below it, and the rounded corners keep
+// a 6° tilt inside 2px.
+const PAD = 10;
+const LEFT_PAD = 2;
 
 // The universal layer has no Image component and no transform/animation
 // surface at all, so the icon pair lives in an RNHostView island: plain RN
@@ -52,13 +59,13 @@ export function IconStack({ synced }: { synced: boolean }) {
 
 const styles = StyleSheet.create({
   stage: {
-    width: ICON_SIZE + TRAVEL + 16,
-    height: ICON_SIZE + 8,
-    justifyContent: 'center',
+    width: LEFT_PAD + ICON_SIZE + TRAVEL + PAD,
+    height: PAD + ICON_SIZE + PAD,
   },
   icon: {
     position: 'absolute',
-    left: 0,
+    left: LEFT_PAD,
+    top: PAD,
     width: ICON_SIZE,
     height: ICON_SIZE,
     borderRadius: 14,
