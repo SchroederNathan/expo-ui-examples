@@ -22,22 +22,6 @@ const ROWS = [
     icon: Icon.select({ ios: 'figure.walk', android: require('./icons/steps.xml') }),
     text: "Steps to the fridge sync as cardio. We don't judge.",
   },
-  {
-    icon: Icon.select({ ios: 'moon.zzz', android: require('./icons/bedtime.xml') }),
-    text: 'Naps you deny taking are logged as sleep data anyway.',
-  },
-  {
-    icon: Icon.select({ ios: 'drop', android: require('./icons/water_drop.xml') }),
-    text: 'Hydration reminders every hour, on the hour, forever.',
-  },
-  {
-    icon: Icon.select({ ios: 'trophy', android: require('./icons/trophy.xml') }),
-    text: 'Achievements unlock for workouts longer than this sheet.',
-  },
-  {
-    icon: Icon.select({ ios: 'heart', android: require('./icons/favorite.xml') }),
-    text: 'Your resting heart rate is shared. Try to look calm.',
-  },
 ];
 
 export const ROW_COUNT = ROWS.length;

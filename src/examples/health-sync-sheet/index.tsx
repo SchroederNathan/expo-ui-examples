@@ -26,10 +26,12 @@ export default function HealthSyncSheetScreen() {
               textAlign: 'center',
               color: dark ? '#98989F' : '#6C6C70',
             }}>
-            The sheet below has no snap points, so it always fits its content — press Continue
+            The sheet below has no snap points, so it always fits its content. Press Continue
             inside it to watch it grow.
           </Text>
-          <Button variant="filled" label="Show sheet" onPress={() => setIsPresented(true)} />
+          <Button variant="text" onPress={() => setIsPresented(true)}>
+            <Text textStyle={{ color: '#007AFF' }}>Show sheet</Text>
+          </Button>
           <Spacer flexible />
         </Column>
       </Host>

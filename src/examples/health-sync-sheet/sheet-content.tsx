@@ -1,5 +1,5 @@
 import { BottomSheet, Column, RNHostView, Text } from '@expo/ui';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
 
 import { ContinueButton } from './continue-button';
@@ -8,6 +8,12 @@ import { ROW_COUNT, RowsReveal } from './rows-reveal';
 
 // Each Continue press reveals this many more rows until they're all out.
 const ROWS_PER_PRESS = 2;
+
+// Keep the animated content at its current height until the native sheet has
+// finished leaving. Collapsing it during Compose's hide animation makes the
+// modal remeasure on every frame, which produces a visibly broken Android
+// dismissal. This is intentionally a little longer than the native exit.
+const DISMISS_CLEANUP_DELAY_MS = 500;
 
 type Props = {
   isPresented: boolean;
@@ -28,15 +34,18 @@ export function HealthSyncSheet({ isPresented, onDismiss }: Props) {
   const titleColor = dark ? '#FFFFFF' : '#000000';
   const captionColor = dark ? '#98989F' : '#6C6C70';
 
-  const dismiss = () => {
-    onDismiss();
-    setVisibleRows(0);
-  };
+  useEffect(() => {
+    if (isPresented) return;
+
+    const cleanup = setTimeout(() => setVisibleRows(0), DISMISS_CLEANUP_DELAY_MS);
+    return () => clearTimeout(cleanup);
+  }, [isPresented]);
 
   return (
-    <BottomSheet isPresented={isPresented} onDismiss={dismiss}>
-      {/* No bottom padding: the button rides directly on the bottom safe-area
-          inset, like a system sheet's primary action. */}
+    <BottomSheet isPresented={isPresented} onDismiss={onDismiss}>
+      {/* BottomSheet already applies both its content inset and the platform's
+          bottom safe area. Adding another bottom inset creates a double gap on
+          iOS, so the action intentionally sits at the end of this content. */}
       <Column spacing={12} style={{ paddingTop: 8 }}>
         <RNHostView matchContents>
           <IconStack synced={visibleRows > 0} />
@@ -60,7 +69,7 @@ export function HealthSyncSheet({ isPresented, onDismiss }: Props) {
           label={allShown ? 'Done' : 'Continue'}
           onPress={
             allShown
-              ? dismiss
+              ? onDismiss
               : () => setVisibleRows((n) => Math.min(n + ROWS_PER_PRESS, ROW_COUNT))
           }
         />
