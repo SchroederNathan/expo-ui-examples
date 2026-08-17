@@ -13,7 +13,15 @@ import type { Photo } from './photos';
 // the Compose tree via RNHostView.
 export function PhotoCard({ photo, cardHeight }: { photo: Photo; cardHeight: number }) {
   return (
-    <Box modifiers={[fillMaxWidth(), height(cardHeight), clip(Shapes.RoundedCorner(28))]}>
+    <Box
+      modifiers={[
+        fillMaxWidth(),
+        height(cardHeight),
+        clip(Shapes.RoundedCorner(28)),
+        // Temporary local demo of the maskClip modifier from expo/expo#48852 —
+        // needs the patched @expo/ui in node_modules, delete after recording.
+        { $type: 'maskClip', shape: Shapes.RoundedCorner(28) },
+      ]}>
       <RNHostView style={StyleSheet.absoluteFill}>
         <Image
           source={{ uri: photo.uri }}
