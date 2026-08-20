@@ -11,7 +11,7 @@ A collection of small, self-contained [`@expo/ui`](https://docs.expo.dev/version
 | [Swift Charts](src/examples/swift-charts) | Every native `Chart` type animating on one shared data set |
 | [Liquid Glass](src/examples/liquid-glass) | `GlassEffectContainer` morphing orbs, tinted glass, clear/regular variants (iOS 26+) |
 | [Siri Glow](src/examples/siri-glow) | Apple Intelligence-style edge glow that hugs the bezel with `ConcentricRectangle` (iOS 26+) |
-| [Music Player](src/examples/music-player) | Mini-player parked at a `BottomSheet` detent that drags up into a full-screen now-playing view |
+| [Tab Bar Mini Player](src/examples/mini-player) | A mini player docked above the liquid-glass tab bar with `NativeTabs.BottomAccessory`, expanding into a full-screen player (iOS 26+) |
 | [Rich Text Editor](src/examples/rich-text-editor) | Two ConcentricRectangle panels, with a segmented format bar that rides the keyboard's safe area (iOS 26+) |
 | [Apple Zoom](src/examples/apple-zoom) | A photo grid whose thumbnails zoom into a full-screen photo with `Link.AppleZoom` (iOS 18+) |
 
@@ -32,7 +32,7 @@ A collection of small, self-contained [`@expo/ui`](https://docs.expo.dev/version
 
 Each example lives in its own folder under `src/examples/` with all of its components, so a demo can be dropped into any Expo SDK 57 project as-is. New examples register themselves in [`src/examples/registry.ts`](src/examples/registry.ts), where `platform` decides which list they appear in — `'universal'` puts an example in both.
 
-An example that demos a navigation transition needs a second route, since the transition is played by the router. Those examples own one file under `src/app/`, which only re-exports a screen from the example folder — see [`src/app/apple-zoom/[id].tsx`](src/app/apple-zoom/%5Bid%5D.tsx).
+An example that demos a navigation transition needs its own routes, since the transition is played by the router. Those examples own files under `src/app/` that only re-export screens from the example folder — a single detail route like [`src/app/apple-zoom/[id].tsx`](src/app/apple-zoom/%5Bid%5D.tsx), or a whole `NativeTabs` layout like [`src/app/mini-player/`](src/app/mini-player).
 
 > The iOS examples use `@expo/ui/swift-ui` (SF Symbols, Swift Charts, glass buttons) and need iOS 17+. The Android examples use `@expo/ui/jetpack-compose`; wallpaper-derived colors need Android 12+, and everything else falls back to the Material 3 baseline. The universal example imports everything from the `@expo/ui` root instead, so the same file runs on both — no `.ios.tsx` / `.android.tsx` split and no `Platform.OS`.
 
