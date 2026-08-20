@@ -11,6 +11,8 @@ import {
   listRowSeparator,
   listStyle,
   padding,
+  scrollIndicators,
+  shadow,
 } from '@expo/ui/swift-ui/modifiers';
 import type { SFSymbol } from 'sf-symbols-typescript';
 import { PlatformColor, useWindowDimensions } from 'react-native';
@@ -38,7 +40,7 @@ export default function ListenNow() {
 
   return (
     <Host style={{ flex: 1 }}>
-      <List modifiers={[listStyle('plain')]}>
+      <List modifiers={[listStyle('plain'), scrollIndicators('hidden')]}>
         <VStack
           spacing={2}
           modifiers={[
@@ -46,7 +48,13 @@ export default function ListenNow() {
             listRowSeparator('hidden'),
             listRowInsets({ top: 8, leading: 0, bottom: 16, trailing: 0 }),
           ]}>
-          <AlbumArt uri={artUri} size={heroSize} cornerRadius={8} shadowRadius={18} />
+          {/* A softer shadow than AlbumArt's built-in one. */}
+          <AlbumArt
+            uri={artUri}
+            size={heroSize}
+            cornerRadius={8}
+            modifiers={[shadow({ radius: 12, y: 6, color: '#00000040' })]}
+          />
           <Text modifiers={[padding({ top: 20 }), font({ textStyle: 'title2', weight: 'bold' })]}>
             Blonde
           </Text>

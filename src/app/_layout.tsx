@@ -35,6 +35,18 @@ export default function RootLayout() {
               : { headerShown: false }
           }
         />
+        {/* The Tab Bar Mini Player's full player: a native sheet the system
+            presents, grabs, and drag-dismisses on its own. */}
+        <Stack.Screen
+          name="mini-player/player"
+          options={{
+            presentation: 'formSheet',
+            headerShown: false,
+            sheetAllowedDetents: [1.0],
+            sheetGrabberVisible: true,
+            contentStyle: { backgroundColor: '#38332F' },
+          }}
+        />
       </Stack>
     </ThemeProvider>
   );

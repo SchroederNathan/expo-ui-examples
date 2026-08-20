@@ -1,8 +1,9 @@
 import { Host } from '@expo/ui';
 import { HStack, Image, List, Section, Spacer, Text } from '@expo/ui/swift-ui';
 import { foregroundStyle } from '@expo/ui/swift-ui/modifiers';
+import type { SFSymbol } from 'sf-symbols-typescript';
 
-const CATEGORIES = [
+const CATEGORIES: { title: string; icon: SFSymbol }[] = [
   { title: 'New Music', icon: 'sparkles' },
   { title: 'Charts', icon: 'chart.bar.fill' },
   { title: 'Radio', icon: 'dot.radiowaves.left.and.right' },

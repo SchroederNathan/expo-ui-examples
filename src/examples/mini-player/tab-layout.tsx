@@ -1,9 +1,9 @@
-import { Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { NativeTabs } from 'expo-router/unstable-native-tabs';
-import { useState } from 'react';
 import { PlatformColor } from 'react-native';
 
 import { MiniPlayerAccessory } from './mini-player-accessory';
+import { player, usePlayer } from './player-store';
 import { TRACKS } from './tracks';
 
 // The demo's own NativeTabs layout — Expo Router resolves tabs from real
@@ -11,8 +11,8 @@ import { TRACKS } from './tracks';
 // The Stack header stays on but transparent: content scrolls under it like
 // Apple Music, and the floating glass back circle is the way out of the demo.
 export default function MiniPlayerTabLayout() {
-  const [trackIndex, setTrackIndex] = useState(0);
-  const [playing, setPlaying] = useState(true);
+  const { trackIndex, playing } = usePlayer();
+  const router = useRouter();
 
   return (
     <>
@@ -22,8 +22,9 @@ export default function MiniPlayerTabLayout() {
           <MiniPlayerAccessory
             track={TRACKS[trackIndex]}
             playing={playing}
-            onToggle={() => setPlaying((value) => !value)}
-            onNext={() => setTrackIndex((index) => (index + 1) % TRACKS.length)}
+            onToggle={player.toggle}
+            onNext={player.next}
+            onOpen={() => router.push('/mini-player/player')}
           />
         </NativeTabs.BottomAccessory>
         {/* The tab screen's own background shows through the list's top
