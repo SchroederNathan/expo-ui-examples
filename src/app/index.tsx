@@ -34,14 +34,15 @@ function ExampleRow({ example, onPress }: { example: Example; onPress: () => voi
 
 export default function ExampleList() {
   const router = useRouter();
-  const open = (slug: string) => router.push({ pathname: '/[slug]', params: { slug } });
+  const open = (example: Example) =>
+    router.push(example.href ?? { pathname: '/[slug]', params: { slug: example.slug } });
 
   return (
     <Host style={{ flex: 1 }}>
       <List>
         <Section>
           {IOS_EXAMPLES.map((example) => (
-            <ExampleRow key={example.slug} example={example} onPress={() => open(example.slug)} />
+            <ExampleRow key={example.slug} example={example} onPress={() => open(example)} />
           ))}
         </Section>
 
@@ -49,7 +50,7 @@ export default function ExampleList() {
             SwiftUI ones: the same screens are listed on Android too. */}
         <Section title="Universal">
           {UNIVERSAL_EXAMPLES.map((example) => (
-            <ExampleRow key={example.slug} example={example} onPress={() => open(example.slug)} />
+            <ExampleRow key={example.slug} example={example} onPress={() => open(example)} />
           ))}
         </Section>
       </List>

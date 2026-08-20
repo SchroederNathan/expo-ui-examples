@@ -103,7 +103,8 @@ export default function ExampleList() {
   const colors = useMaterialColors();
   const insets = useSafeAreaInsets();
 
-  const open = (slug: string) => router.push({ pathname: '/[slug]', params: { slug } });
+  const open = (example: AndroidExample | UniversalExample) =>
+    router.push(example.href ?? { pathname: '/[slug]', params: { slug: example.slug } });
 
   return (
     <Host style={{ flex: 1 }}>
@@ -131,7 +132,7 @@ export default function ExampleList() {
               index={index}
               count={ANDROID_EXAMPLES.length}
               colors={colors}
-              onPress={() => open(example.slug)}
+              onPress={() => open(example)}
             />
           ))}
 
@@ -151,7 +152,7 @@ export default function ExampleList() {
               index={index}
               count={UNIVERSAL_EXAMPLES.length}
               colors={colors}
-              onPress={() => open(example.slug)}
+              onPress={() => open(example)}
             />
           ))}
         </LazyColumn>

@@ -25,13 +25,15 @@ export default function MaterialCarouselScreen() {
     <Host style={{ flex: 1 }}>
       <Surface color={colors.background} modifiers={[fillMaxSize()]}>
         <Column
-          modifiers={[fillMaxWidth(), verticalScroll(), padding(16, 16, 16, 32)]}
+          modifiers={[fillMaxWidth(), verticalScroll(), padding(0, 16, 0, 32)]}
           verticalArrangement={{ spacedBy: 28 }}>
           <Section
             colors={colors}
             title="Hero"
             caption="One centered item between two small peeks — snaps a page at a time by default">
-            <HorizontalCenteredHeroCarousel itemSpacing={8}>
+            <HorizontalCenteredHeroCarousel
+              itemSpacing={8}
+              contentPadding={{ start: 16, end: 16 }}>
               {PHOTOS.map((p) => (
                 <PhotoCard key={p.id} photo={p} cardHeight={340} />
               ))}
@@ -42,7 +44,10 @@ export default function MaterialCarouselScreen() {
             colors={colors}
             title="Multi-browse"
             caption="A large item with smaller ones peeking in, so you can see what comes next">
-            <HorizontalMultiBrowseCarousel preferredItemWidth={240} itemSpacing={8}>
+            <HorizontalMultiBrowseCarousel
+              preferredItemWidth={240}
+              itemSpacing={8}
+              contentPadding={{ start: 16, end: 16 }}>
               {PHOTOS.map((p) => (
                 <PhotoCard key={p.id} photo={p} cardHeight={240} />
               ))}
@@ -53,7 +58,10 @@ export default function MaterialCarouselScreen() {
             colors={colors}
             title="Uncontained"
             caption="Fixed-width items with free-form scrolling — the only style that defaults to no snapping">
-            <HorizontalUncontainedCarousel itemWidth={172} itemSpacing={8}>
+            <HorizontalUncontainedCarousel
+              itemWidth={172}
+              itemSpacing={8}
+              contentPadding={{ start: 16, end: 16 }}>
               {PHOTOS.map((p) => (
                 <PhotoCard key={p.id} photo={p} cardHeight={200} />
               ))}
@@ -78,7 +86,7 @@ function Section({
 }) {
   return (
     <Column modifiers={[fillMaxWidth()]} verticalArrangement={{ spacedBy: 10 }}>
-      <Column verticalArrangement={{ spacedBy: 2 }}>
+      <Column modifiers={[padding(16, 0, 16, 0)]} verticalArrangement={{ spacedBy: 2 }}>
         <Text color={colors.onBackground} style={{ typography: 'titleMedium' }}>
           {title}
         </Text>

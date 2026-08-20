@@ -1,3 +1,4 @@
+import type { Href } from 'expo-router';
 import type { ComponentType } from 'react';
 import type { ImageSourcePropType } from 'react-native';
 import type { SFSymbol } from 'sf-symbols-typescript';
@@ -15,6 +16,7 @@ import UniversalSettingsScreen from './universal-settings';
 import AppleZoomScreen from './apple-zoom';
 import MaterialCarouselScreen from './material-carousel';
 import BottomSheetScreen from './bottom-sheet';
+import MiniPlayerScreen from './mini-player';
 
 type BaseExample = {
   slug: string;
@@ -23,6 +25,12 @@ type BaseExample = {
   /** Used by the iOS list. Android-only examples never render it. */
   systemImage: SFSymbol;
   screen: ComponentType;
+  /**
+   * Route the home lists open instead of `/[slug]`, for examples that need
+   * their own route files (e.g. a nested layout). `screen` still backs
+   * `/[slug]` so direct links keep working.
+   */
+  href?: Href;
 };
 
 type WithMaterialIcon = {
@@ -148,6 +156,16 @@ export const EXAMPLES: Example[] = [
     platform: 'universal',
     materialIcon: require('../../assets/icons/bottom_panel_open.xml'),
     screen: BottomSheetScreen,
+  },
+  {
+    slug: 'mini-player',
+    title: 'Tab Bar Mini Player',
+    description: 'A mini player docked above a liquid-glass tab bar with NativeTabs.BottomAccessory',
+    systemImage: 'play.circle.fill',
+    screen: MiniPlayerScreen,
+    // The demo is its own NativeTabs layout built from real route files, so
+    // the list jumps straight into it rather than through a landing screen.
+    href: '/mini-player/demo',
   },
 ];
 
