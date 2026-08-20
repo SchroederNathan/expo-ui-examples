@@ -30,11 +30,10 @@ import type { SFSymbol } from 'sf-symbols-typescript';
 import { useEffect, useState } from 'react';
 import { useWindowDimensions } from 'react-native';
 
-import { AlbumArt } from '../music-player/album-art';
-import { formatTime } from '../music-player/tracks';
-import { useAlbumArt } from '../music-player/use-album-art';
+import { AlbumArt } from './album-art';
 import { player, usePlayer } from './player-store';
-import { TRACKS } from './tracks';
+import { formatTime, TRACKS } from './tracks';
+import { useAlbumArt } from './use-album-art';
 
 // The warm gray Apple Music derives from the blond artwork.
 export const PLAYER_BG = '#38332F';

@@ -17,8 +17,8 @@ import {
 import type { SFSymbol } from 'sf-symbols-typescript';
 import { PlatformColor, useWindowDimensions } from 'react-native';
 
-import { AlbumArt } from '../music-player/album-art';
-import { useAlbumArt } from '../music-player/use-album-art';
+import { AlbumArt } from './album-art';
+import { useAlbumArt } from './use-album-art';
 import { TRACKS } from './tracks';
 
 // Apple Music's accent red.
