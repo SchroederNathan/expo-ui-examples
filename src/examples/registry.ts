@@ -16,6 +16,7 @@ import AppleZoomScreen from './apple-zoom';
 import MaterialCarouselScreen from './material-carousel';
 import BottomSheetScreen from './bottom-sheet';
 import MiniPlayerScreen from './mini-player';
+import ColorPickerScreen from './color-picker';
 
 type BaseExample = {
   slug: string;
@@ -158,6 +159,13 @@ export const EXAMPLES: Example[] = [
     // The demo is its own NativeTabs layout built from real route files, so
     // the list jumps straight into it rather than through a landing screen.
     href: '/mini-player/demo',
+  },
+  {
+    slug: 'color-picker',
+    title: 'Color Picker',
+    description: 'Native SwiftUI color picker',
+    systemImage: 'paintpalette.fill',
+    screen: ColorPickerScreen,
   },
 ];
 
