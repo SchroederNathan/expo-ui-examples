@@ -1,22 +1,20 @@
 import { Host } from '@expo/ui';
-import { Circle, ColorPicker, Rectangle, ZStack } from '@expo/ui/swift-ui';
+import { Capsule, ColorPicker, Rectangle, ZStack } from '@expo/ui/swift-ui';
 import {
   animation,
   Animation,
-  brightness,
+  fixedSize,
+  font,
   foregroundStyle,
   frame,
-  grayscale,
   ignoreSafeArea,
-  labelsHidden,
-  scaleEffect,
   shadow,
 } from '@expo/ui/swift-ui/modifiers';
 import { useState } from 'react';
 
-// Tap the white circle to open the native color wheel; the whole page takes
-// the selected color. The circle IS the ColorPicker swatch, filtered white
-// with grayscale + brightness so it stays tappable.
+// Tap the pill to open the native color wheel; the whole page takes the
+// selected color. The pill is a Capsule behind the ColorPicker's own label
+// and dial, because SwiftUI only opens the wheel from that dial.
 // Fully self-contained — drop this file into any Expo SDK 57 project.
 export default function ColorPickerScreen() {
   const [color, setColor] = useState('#FF6482');
@@ -33,17 +31,22 @@ export default function ColorPickerScreen() {
             animation(Animation.spring({ duration: 0.4 }), parseInt(hex.slice(1), 16)),
           ]}
         />
-        <Circle
+        <Capsule
           modifiers={[
             foregroundStyle('#FFFFFF'),
-            frame({ width: 88, height: 88 }),
+            frame({ width: 232, height: 64 }),
             shadow({ radius: 24, color: '#00000033', y: 8 }),
           ]}
         />
         <ColorPicker
+          label="Change color"
           selection={color}
           onSelectionChange={setColor}
-          modifiers={[labelsHidden(), scaleEffect(2.75), grayscale(1), brightness(1)]}
+          modifiers={[
+            font({ textStyle: 'headline' }),
+            foregroundStyle('#1C1C1E'),
+            fixedSize(),
+          ]}
         />
       </ZStack>
     </Host>
