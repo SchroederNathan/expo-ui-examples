@@ -15,7 +15,7 @@ import type { Photo } from './photos';
 export function PhotoCard({ photo, cardHeight }: { photo: Photo; cardHeight: number }) {
   return (
     <Box modifiers={[fillMaxWidth(), height(cardHeight), maskClip(Shapes.RoundedCorner(28))]}>
-      <RNHostView style={StyleSheet.absoluteFill}>
+      <RNHostView>
         <Image
           source={{ uri: photo.uri }}
           style={StyleSheet.absoluteFill}
