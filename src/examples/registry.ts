@@ -18,6 +18,10 @@ import BottomSheetScreen from './bottom-sheet';
 import MiniPlayerScreen from './mini-player';
 import ColorPickerScreen from './color-picker';
 import PullDownMenuScreen from './pull-down-menu';
+import DropdownMenuScreen from './dropdown-menu';
+
+// Material Symbols ship as importable Android drawables; the Compose list uses this one.
+import MoreVert from '@expo/material-symbols/more_vert.xml';
 
 type BaseExample = {
   slug: string;
@@ -174,6 +178,15 @@ export const EXAMPLES: Example[] = [
     description: 'Tap the ellipsis on a photo card for a SwiftUI Menu with a favorite toggle and album submenu',
     systemImage: 'ellipsis.circle',
     screen: PullDownMenuScreen,
+  },
+  {
+    slug: 'dropdown-menu',
+    title: 'Dropdown Menu',
+    description: 'Tap the more button on a photo card for a Material 3 DropdownMenu with a favorite toggle and album submenu',
+    systemImage: 'filemenu.and.selection',
+    platform: 'android',
+    materialIcon: MoreVert,
+    screen: DropdownMenuScreen,
   },
 ];
 
