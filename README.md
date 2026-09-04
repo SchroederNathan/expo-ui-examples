@@ -23,6 +23,7 @@ A collection of small, self-contained [`@expo/ui`](https://docs.expo.dev/version
 | [Material You](src/examples/material-you) | Seed a Material 3 palette from a color or the device wallpaper with `useMaterialColors` |
 | [Expressive Loaders](src/examples/expressive-loaders) | Morphing `LoadingIndicator` and wavy progress indicators driven by a fake install |
 | [Material 3 Carousel](src/examples/material-carousel) | Hero, multi-browse, and uncontained native Compose carousels browsing one photo set |
+| [Dropdown Menu](src/examples/dropdown-menu) | Photo cards with a ⋮ icon button that opens a Compose `DropdownMenu`: favorite toggle, two-page album picker, `error`-tinted delete — the same grid as the iOS Pull-Down Menu example |
 
 ### Universal
 
