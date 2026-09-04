@@ -17,6 +17,7 @@ import MaterialCarouselScreen from './material-carousel';
 import BottomSheetScreen from './bottom-sheet';
 import MiniPlayerScreen from './mini-player';
 import ColorPickerScreen from './color-picker';
+import ContextMenuScreen from './context-menu';
 
 type BaseExample = {
   slug: string;
@@ -166,6 +167,13 @@ export const EXAMPLES: Example[] = [
     description: 'Native SwiftUI color picker',
     systemImage: 'paintpalette.fill',
     screen: ColorPickerScreen,
+  },
+  {
+    slug: 'context-menu',
+    title: 'Context Menu',
+    description: 'Long-press photo tiles for a SwiftUI ContextMenu with a preview, favorite toggle, and album submenu',
+    systemImage: 'contextualmenu.and.cursorarrow',
+    screen: ContextMenuScreen,
   },
 ];
 
