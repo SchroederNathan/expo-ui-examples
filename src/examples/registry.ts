@@ -17,6 +17,7 @@ import MaterialCarouselScreen from './material-carousel';
 import BottomSheetScreen from './bottom-sheet';
 import MiniPlayerScreen from './mini-player';
 import ColorPickerScreen from './color-picker';
+import GaugesScreen from './gauges';
 
 type BaseExample = {
   slug: string;
@@ -104,6 +105,13 @@ export const EXAMPLES: Example[] = [
     description: 'Thumbnails that zoom into a full-screen photo with the iOS 18 transition',
     systemImage: 'photo.on.rectangle.angled',
     screen: AppleZoomScreen,
+  },
+  {
+    slug: 'gauges',
+    title: 'Gauges',
+    description: 'Native SwiftUI gauge styles with live value labels and tinting',
+    systemImage: 'gauge.with.dots.needle.67percent',
+    screen: GaugesScreen,
   },
   {
     slug: 'material-you',
