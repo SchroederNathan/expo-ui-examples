@@ -14,6 +14,7 @@ A collection of small, self-contained [`@expo/ui`](https://docs.expo.dev/version
 | [Tab Bar Mini Player](src/examples/mini-player) | A mini player docked above the liquid-glass tab bar with `NativeTabs.BottomAccessory`, expanding into a full-screen player (iOS 26+) |
 | [Rich Text Editor](src/examples/rich-text-editor) | Two ConcentricRectangle panels, with a segmented format bar that rides the keyboard's safe area (iOS 26+) |
 | [Apple Zoom](src/examples/apple-zoom) | A photo grid whose thumbnails zoom into a full-screen photo with `Link.AppleZoom` (iOS 18+) |
+| [Pull-Down Menu](src/examples/pull-down-menu) | Photo cards with an ellipsis button that opens a SwiftUI `Menu`: favorite `Toggle`, album submenu, destructive delete — the Android Dropdown Menu example is the same grid |
 
 ### Android
 
