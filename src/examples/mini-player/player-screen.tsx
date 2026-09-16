@@ -12,7 +12,7 @@ import {
   ZStack,
 } from '@expo/ui/swift-ui';
 import {
-  backgroundOverlay,
+  background,
   buttonStyle,
   clipShape,
   disabled,
@@ -77,9 +77,13 @@ export default function PlayerScreen() {
   const contentW = width - 66;
   const progress = Math.min(1, elapsed / track.duration);
 
-  useEffect(() => {
+  // Reset the scrubber when the track changes, adjusting state during render
+  // instead of in an effect so the stale time never paints.
+  const [prevTrack, setPrevTrack] = useState(track);
+  if (prevTrack !== track) {
+    setPrevTrack(track);
     setElapsed(0);
-  }, [track]);
+  }
 
   useEffect(() => {
     if (!playing) {
@@ -139,7 +143,7 @@ export default function PlayerScreen() {
                     font({ size: 12, weight: 'bold' }),
                     foregroundStyle(PLAYER_BG),
                     frame({ width: 17, height: 17 }),
-                    backgroundOverlay({ color: '#FFFFFF99' }),
+                    background('#FFFFFF99'),
                     clipShape('roundedRectangle', 4),
                   ]}>
                   E

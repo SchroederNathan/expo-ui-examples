@@ -74,7 +74,9 @@ export function GlassPlayground() {
 
   return (
     <Host style={{ flex: 1 }}>
-      <ZStack>
+      {/* Host top-aligns its content since SDK 58, so the stack claims the full
+          host and centers itself — the blob offsets are relative to that center. */}
+      <ZStack modifiers={[frame({ maxWidth: 9999, maxHeight: 9999, alignment: 'center' })]}>
         <BackgroundBlob colors={['#0A84FF', '#5E5CE6']} x={-110} y={-190} size={330} />
         <BackgroundBlob colors={['#BF5AF2', '#FF375F']} x={130} y={-20} size={300} />
         <BackgroundBlob colors={['#FF9F0A', '#30D158']} x={-90} y={200} size={310} />

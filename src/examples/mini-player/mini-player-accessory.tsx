@@ -1,5 +1,5 @@
 import { Image } from 'expo-image';
-import { NativeTabs } from 'expo-router/unstable-native-tabs';
+import { NativeTabs } from 'expo-router/native-tabs';
 import { SymbolView } from 'expo-symbols';
 import { PlatformColor, Pressable, StyleSheet, Text, View } from 'react-native';
 

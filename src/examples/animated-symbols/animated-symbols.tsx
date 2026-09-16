@@ -51,7 +51,7 @@ function TapSymbol({ symbol, effect }: Item) {
 }
 
 // Tap an icon to animate it. Fully self-contained — drop this file into any
-// Expo SDK 57 project. Requires iOS 17+ for symbolEffect.
+// Expo SDK 58 project. Requires iOS 17+ for symbolEffect.
 export function AnimatedSymbols() {
   return (
     <Host matchContents>

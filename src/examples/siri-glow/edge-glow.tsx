@@ -98,7 +98,8 @@ function Ripples() {
   const [phase, setPhase] = useState(false);
 
   useEffect(() => {
-    setPhase(true);
+    const kick = requestAnimationFrame(() => setPhase(true));
+    return () => cancelAnimationFrame(kick);
   }, []);
 
   return (
@@ -134,10 +135,14 @@ export function EdgeGlow() {
   const [hue, setHue] = useState(0);
   const [breathe, setBreathe] = useState(false);
 
-  // Kick off the endless color travel and the bloom's slow breathing.
+  // Kick off the endless color travel and the bloom's slow breathing one
+  // frame after the resting values commit.
   useEffect(() => {
-    setHue(360);
-    setBreathe(true);
+    const kick = requestAnimationFrame(() => {
+      setHue(360);
+      setBreathe(true);
+    });
+    return () => cancelAnimationFrame(kick);
   }, []);
 
   return (

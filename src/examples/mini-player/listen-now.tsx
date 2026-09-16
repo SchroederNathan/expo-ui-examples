@@ -1,7 +1,7 @@
 import { Host } from '@expo/ui';
 import { Button, HStack, Image, List, Spacer, Text, VStack } from '@expo/ui/swift-ui';
 import {
-  backgroundOverlay,
+  background,
   buttonStyle,
   clipShape,
   font,
@@ -132,7 +132,7 @@ function PillButton({ icon, label }: { icon: SFSymbol; label: string }) {
           frame({ width: pillWidth, height: 50 }),
           // Semantic fill: #F2F2F7 in light, #1C1C1E in dark — the same pair
           // Apple Music's own Play/Shuffle pills use.
-          backgroundOverlay({ color: PlatformColor('secondarySystemBackground') }),
+          background(PlatformColor('secondarySystemBackground')),
           clipShape('capsule'),
         ]}>
         <Image systemName={icon} size={16} color={MUSIC_RED} />

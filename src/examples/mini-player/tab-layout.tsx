@@ -1,5 +1,5 @@
 import { Stack, useRouter } from 'expo-router';
-import { NativeTabs } from 'expo-router/unstable-native-tabs';
+import { NativeTabs } from 'expo-router/native-tabs';
 import { PlatformColor } from 'react-native';
 
 import { MiniPlayerAccessory } from './mini-player-accessory';

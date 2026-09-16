@@ -1,7 +1,5 @@
-import { Box, RNHostView } from '@expo/ui/jetpack-compose';
+import { Image } from '@expo/ui/jetpack-compose';
 import { fillMaxWidth, height, maskClip, Shapes } from '@expo/ui/jetpack-compose/modifiers';
-import { Image } from 'expo-image';
-import { StyleSheet } from 'react-native';
 
 import type { Photo } from './photos';
 
@@ -9,20 +7,15 @@ import type { Photo } from './photos';
 // the extra-large shape (28dp). maskClip (not clip) rounds the carousel's reveal
 // mask itself, so peek items keep their corners while the strategy squeezes them.
 // The carousel strategy decides each item's width, so the card only fixes its
-// height and fills the width it is given. There is no Compose Image component in
-// @expo/ui — the photo is an expo-image hosted inside the Compose tree via
-// RNHostView.
+// height and fills the width it is given. The photo renders with the Compose
+// Image component, so the whole card stays inside the Compose tree.
 export function PhotoCard({ photo, cardHeight }: { photo: Photo; cardHeight: number }) {
   return (
-    <Box modifiers={[fillMaxWidth(), height(cardHeight), maskClip(Shapes.RoundedCorner(28))]}>
-      <RNHostView>
-        <Image
-          source={{ uri: photo.uri }}
-          style={StyleSheet.absoluteFill}
-          contentFit="cover"
-          transition={200}
-        />
-      </RNHostView>
-    </Box>
+    <Image
+      source={{ uri: photo.uri }}
+      contentScale="crop"
+      contentDescription={photo.title}
+      modifiers={[fillMaxWidth(), height(cardHeight), maskClip(Shapes.RoundedCorner(28))]}
+    />
   );
 }

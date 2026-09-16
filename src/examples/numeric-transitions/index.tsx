@@ -21,7 +21,11 @@ export default function NumericTransitionsScreen() {
 
   return (
     <Host style={{ flex: 1 }}>
-      <VStack spacing={32}>
+      {/* Host top-aligns its content since SDK 58, so the stack claims the full
+          host and centers itself. */}
+      <VStack
+        spacing={32}
+        modifiers={[frame({ maxWidth: 9999, maxHeight: 9999, alignment: 'center' })]}>
         <AnimatedNumber value={count} />
         <HStack spacing={16}>
           <Button
