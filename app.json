@@ -38,7 +38,8 @@
       "expo-asset",
       "expo-image",
       "expo-web-browser",
-      "expo-font"
+      "expo-font",
+      "expo-status-bar"
     ],
     "experiments": {
       "typedRoutes": true,

@@ -1,6 +1,6 @@
 # Expo UI Examples
 
-A collection of small, self-contained [`@expo/ui`](https://docs.expo.dev/versions/v57.0.0/sdk/ui/) demos (Expo SDK 57). The whole app is built with Expo UI.
+A collection of small, self-contained [`@expo/ui`](https://docs.expo.dev/versions/v58.0.0/sdk/ui/) demos (Expo SDK 58 beta). The whole app is built with Expo UI.
 
 ## Examples
 
@@ -30,7 +30,7 @@ A collection of small, self-contained [`@expo/ui`](https://docs.expo.dev/version
 | [Universal Settings](src/examples/universal-settings) | One tree of universal components rendering as a SwiftUI `Form` and a Material 3 grouped list, with every control wired back into `Host` |
 | [Bottom Sheet](src/examples/bottom-sheet) | A universal `BottomSheet` that fits its content and grows as additional rows are revealed |
 
-Each example lives in its own folder under `src/examples/` with all of its components, so a demo can be dropped into any Expo SDK 57 project as-is. New examples register themselves in [`src/examples/registry.ts`](src/examples/registry.ts), where `platform` decides which list they appear in — `'universal'` puts an example in both.
+Each example lives in its own folder under `src/examples/` with all of its components, so a demo can be dropped into any Expo SDK 58 project as-is. New examples register themselves in [`src/examples/registry.ts`](src/examples/registry.ts), where `platform` decides which list they appear in — `'universal'` puts an example in both.
 
 An example that demos a navigation transition needs its own routes, since the transition is played by the router. Those examples own files under `src/app/` that only re-export screens from the example folder — a single detail route like [`src/app/apple-zoom/[id].tsx`](src/app/apple-zoom/%5Bid%5D.tsx), or a whole `NativeTabs` layout like [`src/app/mini-player/`](src/app/mini-player).
 

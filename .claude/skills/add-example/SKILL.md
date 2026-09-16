@@ -32,7 +32,7 @@ Rules for this repo:
   - **Android-only** — components from `@expo/ui/jetpack-compose`, modifiers from `.../modifiers`. Registry needs `platform: 'android'` + a `materialIcon`.
   - **Universal** — *every* import from the `@expo/ui` root, one tree for both platforms: no `.ios.tsx`/`.android.tsx`, no `Platform.OS`, no `modifiers` escape hatch. Registry needs `platform: 'universal'` plus both `systemImage` and `materialIcon`, and the example must be verified on an iOS simulator **and** an Android emulator.
 - Never mix `@expo/ui/swift-ui` and `@expo/ui/jetpack-compose` in one file — importing either on the wrong platform crashes with "Unable to get view config".
-- Keep the example **self-contained in its folder** so it can be dropped into any SDK 57 project as-is. That includes its icons: example-owned drawables go in `src/examples/<slug>/icons/`, and only the registry row icon lives in `assets/icons/`.
+- Keep the example **self-contained in its folder** so it can be dropped into any SDK 58 project as-is. That includes its icons: example-owned drawables go in `src/examples/<slug>/icons/`, and only the registry row icon lives in `assets/icons/`.
 - Confirm APIs against the installed types — `node_modules/@expo/ui/build/<swift-ui|jetpack-compose|universal>/<Component>/index.d.ts` — and the versioned docs (https://docs.expo.dev/versions/v57.0.0/), per AGENTS.md.
 - React Compiler is enabled: never name a component `Symbol`, and avoid `!` non-null assertions.
 
