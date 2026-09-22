@@ -1,4 +1,4 @@
-import { Host } from '@expo/ui';
+import { Host } from "@expo/ui";
 import {
   Button,
   Capsule,
@@ -10,7 +10,7 @@ import {
   Text,
   VStack,
   ZStack,
-} from '@expo/ui/swift-ui';
+} from "@expo/ui/swift-ui";
 import {
   background,
   buttonStyle,
@@ -22,23 +22,25 @@ import {
   ignoreSafeArea,
   lineLimit,
   monospacedDigit,
+  onGeometryChange,
   padding,
   shadow,
   tint,
-} from '@expo/ui/swift-ui/modifiers';
-import type { SFSymbol } from 'sf-symbols-typescript';
-import { useEffect, useState } from 'react';
-import { useWindowDimensions } from 'react-native';
+} from "@expo/ui/swift-ui/modifiers";
+import type { SFSymbol } from "sf-symbols-typescript";
+import { useEffect, useState } from "react";
+import { View } from "react-native";
 
-import { AlbumArt } from './album-art';
-import { player, usePlayer } from './player-store';
-import { formatTime, TRACKS } from './tracks';
-import { useAlbumArt } from './use-album-art';
+import { AlbumArt } from "./album-art";
+import { player, usePlayer } from "./player-store";
+import { formatTime, TRACKS } from "./tracks";
+import { useAlbumArt } from "./use-album-art";
+import { useContentSize, type ContentSize } from "./use-content-size";
 
 // The warm gray Apple Music derives from the blond artwork.
-export const PLAYER_BG = '#38332F';
-const white = foregroundStyle({ type: 'color', color: '#FFFFFF' });
-const dim = foregroundStyle({ type: 'color', color: '#FFFFFF99' });
+export const PLAYER_BG = "#38332F";
+const white = foregroundStyle({ type: "color", color: "#FFFFFF" });
+const dim = foregroundStyle({ type: "color", color: "#FFFFFF99" });
 
 function GlyphButton({
   systemName,
@@ -50,7 +52,7 @@ function GlyphButton({
   onPress: () => void;
 }) {
   return (
-    <Button onPress={onPress} modifiers={[buttonStyle('plain')]}>
+    <Button onPress={onPress} modifiers={[buttonStyle("plain")]}>
       <Image
         systemName={systemName}
         size={size}
@@ -60,21 +62,67 @@ function GlyphButton({
   );
 }
 
+// Everything except the artwork adds up to ~412pt of fixed height (the 62pt
+// top padding, title block, scrubber, transport, volume and icon rows and
+// their paddings); the rest is a minimum for the Spacer above the volume
+// row. The art takes what is left of the sheet's height after this, so on
+// a short sheet it shrinks instead of pushing the bottom rows off-screen.
+const CHROME_HEIGHT = 430;
+// Apple Music's 27pt art margins and 33pt content margins.
+const ART_MARGIN = 27;
+const CONTENT_MARGIN = 33;
+// Wider than this and the sheet reads as a poster, not a player.
+const MAX_CONTENT_WIDTH = 420;
+
+function contentWidthFor({ width }: ContentSize) {
+  return Math.min(width - CONTENT_MARGIN * 2, MAX_CONTENT_WIDTH);
+}
+
+function artSizeFor(size: ContentSize) {
+  const byWidth = Math.min(size.width - ART_MARGIN * 2, MAX_CONTENT_WIDTH + 12);
+  const byHeight = size.height - CHROME_HEIGHT;
+  return Math.max(120, Math.floor(Math.min(byWidth, byHeight)));
+}
+
 // Apple Music's full player. Presented as a formSheet route (see the root
 // layout), so arriving, the grabber, and drag-to-dismiss are all the system
 // sheet's own behavior. Metrics are measured off a real Apple Music
 // screenshot: 27pt art margins, 33pt content margins, and the volume/icon
-// rows anchored 96pt and 66pt off the bottom edge.
+// rows anchored 96pt and 66pt off the bottom edge. Sizes come from the
+// measured sheet, not the window: on a wide device the formSheet is a
+// centered card narrower than the screen, and a sidebar tab bar behind it
+// still carves its safe region.
 export default function PlayerScreen() {
+  const {
+    size,
+    onLayout,
+    onGeometryChange: onContentGeometry,
+  } = useContentSize();
+
+  return (
+    <View style={{ flex: 1 }} onLayout={onLayout}>
+      {size != null && (
+        <Player size={size} onContentGeometry={onContentGeometry} />
+      )}
+    </View>
+  );
+}
+
+function Player({
+  size,
+  onContentGeometry,
+}: {
+  size: ContentSize;
+  onContentGeometry: (frame: { width: number; height: number }) => void;
+}) {
   const { trackIndex, playing } = usePlayer();
   const track = TRACKS[trackIndex];
   const artUri = useAlbumArt();
-  const { width } = useWindowDimensions();
   const [elapsed, setElapsed] = useState(0);
   const [volume, setVolume] = useState(0.7);
 
-  const artSize = width - 54;
-  const contentW = width - 66;
+  const artSize = artSizeFor(size);
+  const contentW = contentWidthFor(size);
   const progress = Math.min(1, elapsed / track.duration);
 
   // Reset the scrubber when the track changes, adjusting state during render
@@ -105,8 +153,8 @@ export default function PlayerScreen() {
         <Rectangle
           modifiers={[
             foregroundStyle({
-              type: 'linearGradient',
-              colors: ['#4A443F', PLAYER_BG],
+              type: "linearGradient",
+              colors: ["#4A443F", PLAYER_BG],
               startPoint: { x: 0.5, y: 0 },
               endPoint: { x: 0.5, y: 1 },
             }),
@@ -114,7 +162,14 @@ export default function PlayerScreen() {
           ]}
         />
 
-        <VStack spacing={0}>
+        {/* Greedy so its geometry is the sheet's whole safe region. */}
+        <VStack
+          spacing={0}
+          modifiers={[
+            frame({ maxWidth: 9999, maxHeight: 9999 }),
+            onGeometryChange(onContentGeometry),
+          ]}
+        >
           <AlbumArt
             uri={artUri}
             size={artSize}
@@ -125,31 +180,43 @@ export default function PlayerScreen() {
             // don't release touches the same way — their rows stay
             // non-draggable, an @expo/ui hosting limitation.)
             modifiers={[
-              shadow({ radius: 16, y: 8, color: '#00000040' }),
+              shadow({ radius: 16, y: 8, color: "#00000040" }),
               padding({ top: 62 }),
               disabled(true),
             ]}
           />
 
-          <HStack spacing={0} modifiers={[frame({ width: contentW }), padding({ top: 34 })]}>
+          <HStack
+            spacing={0}
+            modifiers={[frame({ width: contentW }), padding({ top: 34 })]}
+          >
             <VStack alignment="leading" spacing={0}>
               <HStack spacing={8}>
-                <Text modifiers={[font({ size: 22, weight: 'bold' }), white, lineLimit(1)]}>
+                <Text
+                  modifiers={[
+                    font({ size: 22, weight: "bold" }),
+                    white,
+                    lineLimit(1),
+                  ]}
+                >
                   {track.title}
                 </Text>
                 {/* The explicit-lyrics badge. */}
                 <Text
                   modifiers={[
-                    font({ size: 12, weight: 'bold' }),
+                    font({ size: 12, weight: "bold" }),
                     foregroundStyle(PLAYER_BG),
                     frame({ width: 17, height: 17 }),
-                    background('#FFFFFF99'),
-                    clipShape('roundedRectangle', 4),
-                  ]}>
+                    background("#FFFFFF99"),
+                    clipShape("roundedRectangle", 4),
+                  ]}
+                >
                   E
                 </Text>
               </HStack>
-              <Text modifiers={[font({ size: 22 }), dim, lineLimit(1)]}>{track.artist}</Text>
+              <Text modifiers={[font({ size: 22 }), dim, lineLimit(1)]}>
+                {track.artist}
+              </Text>
             </VStack>
             <Spacer />
             <Image systemName="ellipsis" size={20} modifiers={[dim]} />
@@ -160,18 +227,21 @@ export default function PlayerScreen() {
           <ZStack alignment="leading" modifiers={[padding({ top: 31 })]}>
             <Capsule
               modifiers={[
-                foregroundStyle({ type: 'color', color: '#FFFFFF33' }),
+                foregroundStyle({ type: "color", color: "#FFFFFF33" }),
                 frame({ width: contentW, height: 7 }),
               ]}
             />
             <Capsule
               modifiers={[
-                foregroundStyle({ type: 'color', color: '#D9D5D1' }),
+                foregroundStyle({ type: "color", color: "#D9D5D1" }),
                 frame({ width: Math.max(7, contentW * progress), height: 7 }),
               ]}
             />
           </ZStack>
-          <HStack spacing={0} modifiers={[frame({ width: contentW }), padding({ top: 11 })]}>
+          <HStack
+            spacing={0}
+            modifiers={[frame({ width: contentW }), padding({ top: 11 })]}
+          >
             <Text modifiers={[font({ size: 13 }), dim, monospacedDigit()]}>
               {formatTime(elapsed)}
             </Text>
@@ -182,15 +252,23 @@ export default function PlayerScreen() {
           </HStack>
 
           <HStack spacing={48} modifiers={[padding({ top: 40 })]}>
-            <GlyphButton systemName="backward.fill" size={34} onPress={player.prev} />
-            <Button onPress={player.toggle} modifiers={[buttonStyle('plain')]}>
+            <GlyphButton
+              systemName="backward.fill"
+              size={34}
+              onPress={player.prev}
+            />
+            <Button onPress={player.toggle} modifiers={[buttonStyle("plain")]}>
               <Image
-                systemName={playing ? 'pause.fill' : 'play.fill'}
+                systemName={playing ? "pause.fill" : "play.fill"}
                 size={50}
                 modifiers={[white, frame({ width: 58, height: 58 })]}
               />
             </Button>
-            <GlyphButton systemName="forward.fill" size={34} onPress={player.next} />
+            <GlyphButton
+              systemName="forward.fill"
+              size={34}
+              onPress={player.next}
+            />
           </HStack>
 
           {/* The volume and icon rows hug the bottom; the leftover space
@@ -204,9 +282,13 @@ export default function PlayerScreen() {
               min={0}
               max={1}
               onValueChange={setVolume}
-              modifiers={[tint('#D9D5D1')]}
+              modifiers={[tint("#D9D5D1")]}
             />
-            <Image systemName="speaker.wave.3.fill" size={13} modifiers={[dim]} />
+            <Image
+              systemName="speaker.wave.3.fill"
+              size={13}
+              modifiers={[dim]}
+            />
           </HStack>
 
           <HStack spacing={86} modifiers={[padding({ top: 23, bottom: 21 })]}>
