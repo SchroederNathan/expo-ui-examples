@@ -10,7 +10,6 @@ A collection of small, self-contained [`@expo/ui`](https://docs.expo.dev/version
 | [Numeric Transitions](src/examples/numeric-transitions) | Counter with `numericText` content transitions and glass buttons |
 | [Swift Charts](src/examples/swift-charts) | Every native `Chart` type animating on one shared data set |
 | [Liquid Glass](src/examples/liquid-glass) | `GlassEffectContainer` morphing orbs, tinted glass, clear/regular variants (iOS 26+) |
-| [Siri Glow](src/examples/siri-glow) | Apple Intelligence-style edge glow that hugs the bezel with `ConcentricRectangle` (iOS 26+) |
 | [Tab Bar Mini Player](src/examples/mini-player) | A mini player docked above the liquid-glass tab bar with `NativeTabs.BottomAccessory`, expanding into a full-screen player (iOS 26+) |
 | [Rich Text Editor](src/examples/rich-text-editor) | Two ConcentricRectangle panels, with a segmented format bar that rides the keyboard's safe area (iOS 26+) |
 | [Apple Zoom](src/examples/apple-zoom) | A photo grid whose thumbnails zoom into a full-screen photo with `Link.AppleZoom` (iOS 18+) |
