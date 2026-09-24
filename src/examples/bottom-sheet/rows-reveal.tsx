@@ -1,39 +1,53 @@
+import LocalFireDepartment from '@expo/material-symbols/local_fire_department.xml';
+import Steps from '@expo/material-symbols/steps.xml';
+import Upload from '@expo/material-symbols/upload.xml';
+import Watch from '@expo/material-symbols/watch.xml';
 import { Column, Host, Icon, RNHostView } from '@expo/ui';
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, useColorScheme } from 'react-native';
+import { StyleSheet, Text, View, useWindowDimensions, type LayoutChangeEvent } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
+import { useSheetColors, type SheetColors } from './colors';
 import { TIMING } from './timing';
 
 const ROWS = [
   {
-    icon: Icon.select({ ios: 'square.and.arrow.up', android: require('./icons/upload.xml') }),
+    icon: Icon.select({ ios: 'square.and.arrow.up', android: Upload }),
     text: 'Every workout you record here is bragged about to Apple Health.',
   },
   {
-    icon: Icon.select({ ios: 'applewatch', android: require('./icons/watch.xml') }),
+    icon: Icon.select({ ios: 'applewatch', android: Watch }),
     text: 'Your Apple Watch tattles on your heart rate in real time.',
   },
   {
-    icon: Icon.select({ ios: 'flame', android: require('./icons/local_fire_department.xml') }),
+    icon: Icon.select({ ios: 'flame', android: LocalFireDepartment }),
     text: 'Calories burned scrolling this sheet count. All twelve of them.',
   },
   {
-    icon: Icon.select({ ios: 'figure.walk', android: require('./icons/steps.xml') }),
+    icon: Icon.select({ ios: 'figure.walk', android: Steps }),
     text: "Steps to the fridge sync as cardio. We don't judge.",
   },
 ];
 
 export const ROW_COUNT = ROWS.length;
 
-const ROW_HEIGHT = 44;
+// The reveal height is computed, not measured, so every row has a fixed
+// height: two lines of text, never more. It grows with the system text size so
+// the second line still fits at large Dynamic Type / font scale settings.
+const MIN_ROW_HEIGHT = 44;
+const LINE_HEIGHT = 20;
+const MAX_LINES = 2;
 const ROW_GAP = 12;
 // The section gap above the rows rides inside the animated height, so the
 // collapsed island adds no dead space between description and button.
 const TOP_GAP = 12;
 
-function revealHeightFor(count: number) {
-  return count === 0 ? 0 : TOP_GAP + count * ROW_HEIGHT + (count - 1) * ROW_GAP;
+function rowHeightFor(fontScale: number) {
+  return Math.max(MIN_ROW_HEIGHT, Math.ceil(MAX_LINES * LINE_HEIGHT * fontScale));
+}
+
+function revealHeightFor(count: number, rowHeight: number) {
+  return count === 0 ? 0 : TOP_GAP + count * rowHeight + (count - 1) * ROW_GAP;
 }
 
 // matchContents sizes the island to its RN content, so the rows need an
@@ -43,20 +57,31 @@ function revealHeightFor(count: number) {
 // card on a wide display (the unfolded Duo, tablets). An island wider than
 // the sheet's column overflows both edges. So a zero-height probe island —
 // which fills whatever its parent offers — reads the real content width, and
-// the rows take exactly that.
+// the rows take exactly that. Until the probe reports, the rows island is not
+// mounted at all: a 0-wide island collapses, then jumps to full width.
 export function RowsReveal({ count }: { count: number }) {
   const [width, setWidth] = useState(0);
+
+  const onProbeLayout = (event: LayoutChangeEvent) => {
+    const next = Math.floor(event.nativeEvent.layout.width);
+    // A transient 0 (before presentation, mid-dismissal) would collapse the rows.
+    if (next > 0) {
+      setWidth(next);
+    }
+  };
 
   return (
     <Column spacing={0}>
       <Column style={{ height: 0 }}>
-        <RNHostView onLayout={(e) => setWidth(Math.floor(e.nativeEvent.layout.width))}>
+        <RNHostView onLayout={onProbeLayout}>
           <View />
         </RNHostView>
       </Column>
-      <RNHostView matchContents>
-        <RevealRows count={count} width={width} />
-      </RNHostView>
+      {width > 0 && (
+        <RNHostView matchContents>
+          <RevealRows count={count} width={width} />
+        </RNHostView>
+      )}
     </Column>
   );
 }
@@ -70,11 +95,12 @@ export function RowsReveal({ count }: { count: number }) {
 // tiny Host per row back inside the island.
 function RevealRows({ count, width }: { count: number; width: number }) {
   const height = useSharedValue(0);
-  const dark = useColorScheme() === 'dark';
+  const colors = useSheetColors();
+  const rowHeight = rowHeightFor(useWindowDimensions().fontScale);
 
   useEffect(() => {
-    height.set(withTiming(revealHeightFor(count), TIMING));
-  }, [count, height]);
+    height.set(withTiming(revealHeightFor(count, rowHeight), TIMING));
+  }, [count, rowHeight, height]);
 
   // Rows below the animated clip simply slide out from under it as the
   // height grows — every Continue press reveals the next batch.
@@ -82,19 +108,10 @@ function RevealRows({ count, width }: { count: number; width: number }) {
     height: height.get(),
   }));
 
-  const iconColor = dark ? '#98989F' : '#6C6C70';
-  const textColor = dark ? '#FFFFFF' : '#000000';
-
   return (
     <Animated.View style={[styles.reveal, { width }, revealStyle]}>
       {ROWS.map((row) => (
-        <Row
-          key={row.text}
-          icon={row.icon}
-          iconColor={iconColor}
-          textColor={textColor}
-          text={row.text}
-        />
+        <Row key={row.text} icon={row.icon} text={row.text} height={rowHeight} colors={colors} />
       ))}
     </Animated.View>
   );
@@ -102,18 +119,20 @@ function RevealRows({ count, width }: { count: number; width: number }) {
 
 type RowProps = {
   icon: ReturnType<typeof Icon.select>;
-  iconColor: string;
-  textColor: string;
   text: string;
+  height: number;
+  colors: SheetColors;
 };
 
-function Row({ icon, iconColor, textColor, text }: RowProps) {
+function Row({ icon, text, height, colors }: RowProps) {
   return (
-    <View style={styles.row}>
+    <View style={[styles.row, { height }]}>
       <Host style={styles.rowIcon}>
-        <Icon name={icon} size={20} color={iconColor} />
+        <Icon name={icon} size={20} color={colors.secondaryLabel} />
       </Host>
-      <Text style={[styles.rowText, { color: textColor }]}>{text}</Text>
+      <Text numberOfLines={MAX_LINES} style={[styles.rowText, { color: colors.label }]}>
+        {text}
+      </Text>
     </View>
   );
 }
@@ -125,7 +144,6 @@ const styles = StyleSheet.create({
     gap: ROW_GAP,
   },
   row: {
-    height: ROW_HEIGHT,
     flexDirection: 'row',
     alignItems: 'center',
     columnGap: 14,
@@ -137,6 +155,6 @@ const styles = StyleSheet.create({
   rowText: {
     flex: 1,
     fontSize: 15,
-    lineHeight: 20,
+    lineHeight: LINE_HEIGHT,
   },
 });

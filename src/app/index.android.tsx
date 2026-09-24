@@ -1,3 +1,4 @@
+import ChevronRight from '@expo/material-symbols/chevron_right.xml';
 import {
   Host,
   Icon,
@@ -24,12 +25,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
   ANDROID_EXAMPLES,
+  hrefFor,
   UNIVERSAL_EXAMPLES,
   type AndroidExample,
   type UniversalExample,
 } from '@/examples/registry';
-
-const CHEVRON = require('../../assets/icons/chevron_right.xml');
 
 // Material 3 "grouped list" corner treatment: the group reads as one rounded
 // slab, so only its outer corners get the full radius and the seams stay tight.
@@ -90,7 +90,7 @@ function ExampleRow({ example, index, count, colors, onPress }: RowProps) {
         <Text style={{ typography: 'bodyMedium' }}>{example.description}</Text>
       </ListItem.SupportingContent>
       <ListItem.TrailingContent>
-        <Icon source={CHEVRON} size={20} tint={colors.onSurfaceVariant} />
+        <Icon source={ChevronRight} size={20} tint={colors.onSurfaceVariant} />
       </ListItem.TrailingContent>
     </ListItem>
   );
@@ -103,8 +103,7 @@ export default function ExampleList() {
   const colors = useMaterialColors();
   const insets = useSafeAreaInsets();
 
-  const open = (example: AndroidExample | UniversalExample) =>
-    router.push(example.href ?? { pathname: '/[slug]', params: { slug: example.slug } });
+  const open = (example: AndroidExample | UniversalExample) => router.push(hrefFor(example));
 
   return (
     <Host style={{ flex: 1 }}>

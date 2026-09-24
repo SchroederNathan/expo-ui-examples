@@ -1,8 +1,21 @@
-import { ConcentricRectangle, EdgeCornerStyle, VStack, ZStack } from '@expo/ui/swift-ui';
+import {
+  ConcentricRectangle,
+  EdgeCornerStyle,
+  RoundedRectangle,
+  VStack,
+  ZStack,
+} from '@expo/ui/swift-ui';
 import type { ConcentricRectangleCornerParams } from '@expo/ui/swift-ui';
-import { foregroundStyle, frame, onTapGesture, padding } from '@expo/ui/swift-ui/modifiers';
-
+import {
+  accessibilityAddTraits,
+  accessibilityHint,
+  foregroundStyle,
+  frame,
+  onTapGesture,
+  padding,
+} from '@expo/ui/swift-ui/modifiers';
 import type { ReactNode } from 'react';
+import { Platform } from 'react-native';
 
 type CardProps = {
   children: ReactNode;
@@ -12,6 +25,8 @@ type CardProps = {
   bottom?: number;
   /** Called for a tap anywhere on the panel, its filled shape included. */
   onTap?: () => void;
+  /** What `onTap` does, read by VoiceOver. */
+  tapHint?: string;
 };
 
 /**
@@ -25,6 +40,10 @@ const SIDE_INSET = 22;
 const INNER_RADIUS = 28;
 
 const white = foregroundStyle({ type: 'color', color: '#FFFFFF' });
+
+// `ConcentricRectangle` is new in iOS 26 and draws nothing on older systems, so
+// they get a plain rounded panel with the same floor radius on every corner.
+const HAS_CONCENTRIC = parseInt(String(Platform.Version), 10) >= 26;
 
 // Every corner is a concentric corner. The four that reach the bezel inherit the
 // display's own radius and stay parallel to it.
@@ -47,13 +66,23 @@ const CORNERS: ConcentricRectangleCornerParams = {
  * The panel runs to the screen edge, where the bezel supplies the contrast its
  * outer corners need — which is why the safe area is the content's problem, not the
  * shape's, and arrives here as `top` / `bottom`.
- *
- * Needs iOS 26+ — `ConcentricRectangle` is where the concentric corner comes from.
  */
-export function Card({ children, top = 0, bottom = 0, onTap }: CardProps) {
+export function Card({ children, top = 0, bottom = 0, onTap, tapHint }: CardProps) {
+  const tapModifiers = onTap
+    ? [
+        onTapGesture(onTap),
+        accessibilityAddTraits(['isButton']),
+        ...(tapHint ? [accessibilityHint(tapHint)] : []),
+      ]
+    : [];
+
   return (
-    <ZStack modifiers={onTap ? [onTapGesture(onTap)] : []}>
-      <ConcentricRectangle corners={CORNERS} modifiers={[white]} />
+    <ZStack modifiers={tapModifiers}>
+      {HAS_CONCENTRIC ? (
+        <ConcentricRectangle corners={CORNERS} modifiers={[white]} />
+      ) : (
+        <RoundedRectangle cornerRadius={INNER_RADIUS} modifiers={[white]} />
+      )}
       <VStack
         alignment="leading"
         spacing={16}

@@ -16,21 +16,14 @@ const DOWNLOAD_MS = 2600;
 const VERIFY_MS = 900;
 
 /**
- * Where the download starts, rather than a true zero.
- *
- * Material 3 flattens the wave entirely below 10% progress and animates the amplitude
- * back in over ~500ms — `WavyProgressIndicatorDefaults.indicatorAmplitude`, which isn't
- * exposed as a prop. Ramping from 0 therefore burns the first tenth of the download on a
- * dead flat bar before the wave even begins to grow, and the morph spends that same
- * stretch creeping through a tenth of one shape transition, so nothing appears to
- * happen on the tap.
- *
- * Opening just past the threshold means the wave and the morph are both moving on the
- * first frame — and a download that lands its first chunk at once is realistic anyway.
+ * Where the download starts, rather than a true zero. Material 3 flattens the wave
+ * below 10% progress (`WavyProgressIndicatorDefaults.indicatorAmplitude`, not exposed
+ * as a prop), so starting from 0 shows a dead flat bar and an unmoving morph right
+ * after the tap. Starting just past 10% puts both in motion on the first frame.
  */
 const FIRST_CHUNK = 0.12;
 
-export type Install = {
+type Install = {
   stage: Stage;
   /** Whole percent, for the label and the wavy bar. */
   percent: number;

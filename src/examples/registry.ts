@@ -1,6 +1,11 @@
+import BottomPanelOpen from '@expo/material-symbols/bottom_panel_open.xml';
+import Palette from '@expo/material-symbols/palette.xml';
+import ProgressActivity from '@expo/material-symbols/progress_activity.xml';
+import Tune from '@expo/material-symbols/tune.xml';
+import ViewCarousel from '@expo/material-symbols/view_carousel.xml';
 import type { Href } from 'expo-router';
 import type { ComponentType } from 'react';
-import type { ImageSourcePropType } from 'react-native';
+import { Platform, type ImageSourcePropType } from 'react-native';
 import type { SFSymbol } from 'sf-symbols-typescript';
 
 import AnimatedSymbolsScreen from './animated-symbols';
@@ -33,10 +38,7 @@ type BaseExample = {
 };
 
 type WithMaterialIcon = {
-  /**
-   * Leading icon for the Android list. Material Symbols XML vector drawable —
-   * see `assets/icons/README.md` for how these are generated.
-   */
+  /** Leading icon for the Android list, imported from `@expo/material-symbols`. */
   materialIcon: ImageSourcePropType;
 };
 
@@ -49,10 +51,7 @@ export type AndroidExample = BaseExample & WithMaterialIcon & { platform: 'andro
 export type UniversalExample = BaseExample & WithMaterialIcon & { platform: 'universal' };
 
 /** Which list the example appears in. `platform` defaults to `'ios'`. */
-export type Example =
-  | (BaseExample & { platform?: 'ios' })
-  | AndroidExample
-  | UniversalExample;
+export type Example = (BaseExample & { platform?: 'ios' }) | AndroidExample | UniversalExample;
 
 export const EXAMPLES: Example[] = [
   {
@@ -103,7 +102,7 @@ export const EXAMPLES: Example[] = [
     description: 'Seed a Material 3 palette from a color or the device wallpaper',
     systemImage: 'paintpalette.fill',
     platform: 'android',
-    materialIcon: require('../../assets/icons/palette.xml'),
+    materialIcon: Palette,
     screen: MaterialYouScreen,
   },
   {
@@ -112,7 +111,7 @@ export const EXAMPLES: Example[] = [
     description: 'Morphing loading indicator and wavy progress driven by a fake install',
     systemImage: 'arrow.triangle.2.circlepath',
     platform: 'android',
-    materialIcon: require('../../assets/icons/progress_activity.xml'),
+    materialIcon: ProgressActivity,
     screen: ExpressiveLoadersScreen,
   },
   {
@@ -121,7 +120,7 @@ export const EXAMPLES: Example[] = [
     description: 'One tree of universal components — a Form on iOS, a Material 3 list on Android',
     systemImage: 'switch.2',
     platform: 'universal',
-    materialIcon: require('../../assets/icons/tune.xml'),
+    materialIcon: Tune,
     screen: UniversalSettingsScreen,
   },
   {
@@ -130,7 +129,7 @@ export const EXAMPLES: Example[] = [
     description: 'Hero, multi-browse, and uncontained carousels browsing one photo set',
     systemImage: 'rectangle.stack',
     platform: 'android',
-    materialIcon: require('../../assets/icons/view_carousel.xml'),
+    materialIcon: ViewCarousel,
     screen: MaterialCarouselScreen,
   },
   {
@@ -139,13 +138,14 @@ export const EXAMPLES: Example[] = [
     description: 'A universal bottom sheet that grows to fit its content',
     systemImage: 'rectangle.bottomhalf.inset.filled',
     platform: 'universal',
-    materialIcon: require('../../assets/icons/bottom_panel_open.xml'),
+    materialIcon: BottomPanelOpen,
     screen: BottomSheetScreen,
   },
   {
     slug: 'mini-player',
     title: 'Tab Bar Mini Player',
-    description: 'A mini player docked above a liquid-glass tab bar with NativeTabs.BottomAccessory',
+    description:
+      'A mini player docked above a liquid-glass tab bar with NativeTabs.BottomAccessory',
     systemImage: 'play.circle.fill',
     screen: MiniPlayerScreen,
     // The demo is its own NativeTabs layout built from real route files, so
@@ -173,3 +173,18 @@ export const ANDROID_EXAMPLES = EXAMPLES.filter(
 export const UNIVERSAL_EXAMPLES = EXAMPLES.filter(
   (e): e is UniversalExample => e.platform === 'universal'
 );
+
+/** Where the home lists send an example: its own route, or the shared `/[slug]`. */
+export function hrefFor(example: Example): Href {
+  return example.href ?? { pathname: '/[slug]', params: { slug: example.slug } };
+}
+
+/**
+ * Whether the example can render here. Platform-specific examples mount SwiftUI or
+ * Compose views that the other platform cannot create, so deep links to them must
+ * be turned away.
+ */
+export function runsOnThisPlatform(example: Example): boolean {
+  const platform = example.platform ?? 'ios';
+  return platform === 'universal' || platform === Platform.OS;
+}

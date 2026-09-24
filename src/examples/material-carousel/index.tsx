@@ -7,18 +7,26 @@ import {
   Surface,
   Text,
   useMaterialColors,
+  type MaterialColors,
 } from '@expo/ui/jetpack-compose';
-import { fillMaxSize, fillMaxWidth, padding, verticalScroll } from '@expo/ui/jetpack-compose/modifiers';
+import {
+  fillMaxSize,
+  fillMaxWidth,
+  padding,
+  verticalScroll,
+} from '@expo/ui/jetpack-compose/modifiers';
 import type { ReactNode } from 'react';
 
 import { PhotoCard } from './photo-card';
 import { PHOTOS } from './photos';
+import { useRefreshOnForeground } from './use-refresh-on-foreground';
 
 // Material 3 Carousel — the three native Compose carousel strategies side by side,
 // browsing the same photo set as the Apple Zoom example. Hero centers one large
 // item between peeks, multi-browse shows a large item with smaller ones trailing,
 // and uncontained scrolls fixed-width items freely.
 export default function MaterialCarouselScreen() {
+  useRefreshOnForeground();
   const colors = useMaterialColors();
 
   return (
@@ -31,9 +39,7 @@ export default function MaterialCarouselScreen() {
             colors={colors}
             title="Hero"
             caption="One centered item between two small peeks — snaps a page at a time by default">
-            <HorizontalCenteredHeroCarousel
-              itemSpacing={8}
-              contentPadding={{ start: 16, end: 16 }}>
+            <HorizontalCenteredHeroCarousel itemSpacing={8} contentPadding={{ start: 16, end: 16 }}>
               {PHOTOS.map((p) => (
                 <PhotoCard key={p.id} photo={p} cardHeight={340} />
               ))}
@@ -79,7 +85,7 @@ function Section({
   caption,
   children,
 }: {
-  colors: ReturnType<typeof useMaterialColors>;
+  colors: MaterialColors;
   title: string;
   caption: string;
   children: ReactNode;

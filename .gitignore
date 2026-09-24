@@ -36,8 +36,10 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-example
 
 # generated native folders
 /ios
 /android
+
+# argent screen recordings
+.argent/

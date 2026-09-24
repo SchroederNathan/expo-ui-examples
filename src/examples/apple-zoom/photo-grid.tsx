@@ -31,19 +31,17 @@ export function PhotoGrid() {
           key={photo.id}
           href={{ pathname: '/apple-zoom/[id]', params: { id: photo.id } }}
           asChild>
-          <Pressable style={{ width: size }}>
+          <Pressable
+            accessibilityLabel={photo.title}
+            accessibilityHint="Opens the photo"
+            style={{ width: size }}>
             {/*
               Only the image is wrapped, so the caption below stays put while the
               thumbnail flies to the next screen. `Link.AppleZoom` takes exactly
               one child.
             */}
             <Link.AppleZoom>
-              <Image
-                source={photo.uri}
-                style={thumbnail}
-                contentFit="cover"
-                transition={200}
-              />
+              <Image source={photo.uri} style={thumbnail} contentFit="cover" transition={200} />
             </Link.AppleZoom>
             <Text style={styles.caption} numberOfLines={1}>
               {photo.title}
@@ -69,6 +67,7 @@ const styles = StyleSheet.create({
   thumbnail: {
     width: '100%',
     borderRadius: 16,
+    borderCurve: 'continuous',
     // Held until the remote image arrives, so the grid never flashes empty.
     backgroundColor: PlatformColor('secondarySystemFill'),
   },

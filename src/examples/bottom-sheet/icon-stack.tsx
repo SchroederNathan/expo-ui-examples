@@ -30,7 +30,7 @@ const LEFT_PAD = 2;
 // surface at all, so the icon pair lives in an RNHostView island: plain RN
 // views driven by Reanimated, identical on both platforms. The Health icon
 // starts exactly underneath the app icon — fully occluded, so "invisible" —
-// and springs out to the right when `synced` flips.
+// and slides out to the right when `synced` flips.
 export function IconStack({ synced }: { synced: boolean }) {
   const progress = useSharedValue(0);
 
@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
     width: ICON_SIZE,
     height: ICON_SIZE,
     borderRadius: 14,
+    borderCurve: 'continuous',
   },
   health: {
     // A hairline keeps the white tile visible against the sheet once it

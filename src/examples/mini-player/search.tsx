@@ -3,6 +3,8 @@ import { HStack, Image, List, Section, Spacer, Text } from '@expo/ui/swift-ui';
 import { foregroundStyle } from '@expo/ui/swift-ui/modifiers';
 import type { SFSymbol } from 'sf-symbols-typescript';
 
+const secondary = foregroundStyle({ type: 'hierarchical', style: 'secondary' });
+
 const CATEGORIES: { title: string; icon: SFSymbol }[] = [
   { title: 'New Music', icon: 'sparkles' },
   { title: 'Charts', icon: 'chart.bar.fill' },
@@ -19,11 +21,7 @@ export default function Search() {
         <Section title="Browse Categories">
           {CATEGORIES.map(({ title, icon }) => (
             <HStack key={title} spacing={12}>
-              <Image
-                systemName={icon}
-                size={16}
-                modifiers={[foregroundStyle({ type: 'hierarchical', style: 'secondary' })]}
-              />
+              <Image systemName={icon} size={16} modifiers={[secondary]} />
               <Text>{title}</Text>
               <Spacer />
             </HStack>

@@ -1,27 +1,16 @@
 export type Track = {
   title: string;
   artist: string;
-  album: string;
   duration: number;
 };
 
 export const TRACKS: Track[] = [
-  { title: 'Nikes', artist: 'Frank Ocean', album: 'Blonde', duration: 314 },
-  { title: 'Ivy', artist: 'Frank Ocean', album: 'Blonde', duration: 249 },
-  {
-    title: 'Pink + White',
-    artist: 'Frank Ocean',
-    album: 'Blonde',
-    duration: 184,
-  },
-  { title: 'Solo', artist: 'Frank Ocean', album: 'Blonde', duration: 257 },
-  {
-    title: 'Self Control',
-    artist: 'Frank Ocean',
-    album: 'Blonde',
-    duration: 249,
-  },
-  { title: 'Nights', artist: 'Frank Ocean', album: 'Blonde', duration: 307 },
+  { title: 'Nikes', artist: 'Frank Ocean', duration: 314 },
+  { title: 'Ivy', artist: 'Frank Ocean', duration: 249 },
+  { title: 'Pink + White', artist: 'Frank Ocean', duration: 184 },
+  { title: 'Solo', artist: 'Frank Ocean', duration: 257 },
+  { title: 'Self Control', artist: 'Frank Ocean', duration: 249 },
+  { title: 'Nights', artist: 'Frank Ocean', duration: 307 },
 ];
 
 export function formatTime(seconds: number) {

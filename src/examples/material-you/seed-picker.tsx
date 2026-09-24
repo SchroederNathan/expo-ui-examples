@@ -1,9 +1,10 @@
 import { Box, Row, type MaterialColors } from '@expo/ui/jetpack-compose';
 import {
   background,
-  clickable,
   clip,
   fillMaxWidth,
+  selectable,
+  selectableGroup,
   Shapes,
   size,
   tween,
@@ -16,6 +17,8 @@ import { MORPH_DURATION, SEEDS, type Seed } from './seeds';
 const SWATCH = 42;
 const RING = 52;
 
+const MORPH = tween({ durationMillis: MORPH_DURATION });
+
 type Props = {
   selected: Seed;
   onSelect: (seed: Seed) => void;
@@ -27,16 +30,16 @@ type Props = {
 // A row of seed colors. Each swatch is a Box clipped to a Material shape, nested
 // in a larger Box that paints the selection ring — `border` has no shape param,
 // so a ring drawn this way follows the clover as faithfully as the circles.
+// `selectable` with the radio button role tells TalkBack which seed is chosen.
 export function SeedPicker({ selected, onSelect, wallpaper, colors }: Props) {
   return (
     <Row
-      modifiers={[fillMaxWidth()]}
+      modifiers={[fillMaxWidth(), selectableGroup()]}
       horizontalArrangement="spaceBetween"
       verticalAlignment="center">
       {SEEDS.map((seed) => {
         const isSelected = seed.name === selected.name;
         const shape = seed.color === null ? Shapes.Material.Clover4Leaf : Shapes.Circle;
-        const morph = tween({ durationMillis: MORPH_DURATION });
 
         return (
           <Box
@@ -46,15 +49,15 @@ export function SeedPicker({ selected, onSelect, wallpaper, colors }: Props) {
               size(RING, RING),
               clip(shape),
               background(isSelected ? colors.onBackground : colors.background, {
-                animationSpec: morph,
+                animationSpec: MORPH,
               }),
-              clickable(() => onSelect(seed)),
+              selectable(isSelected, () => onSelect(seed), 'radioButton'),
             ]}>
             <Box
               modifiers={[
                 size(SWATCH, SWATCH),
                 clip(shape),
-                background(seed.color ?? wallpaper.primary, { animationSpec: morph }),
+                background(seed.color ?? wallpaper.primary, { animationSpec: MORPH }),
               ]}
             />
           </Box>

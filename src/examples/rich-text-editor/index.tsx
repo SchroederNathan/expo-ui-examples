@@ -51,8 +51,9 @@ const GAP = 12;
 // multiline field spends the return key on newlines, and there is no `onSubmit` to
 // catch instead.
 //
-// Requires iOS 26+ for the panels' concentric corners; the format segments also
-// reposition the caret, which needs iOS 18+ (without it they append to the end).
+// The panels' concentric corners need iOS 26 (older systems get plain rounded
+// panels); the format segments also reposition the caret, which needs iOS 18+
+// (without it they append to the end).
 export default function RichTextEditorScreen() {
   const state = useRichText(INITIAL_SOURCE);
   // The shared header is transparent and overlays the screen, so its height is not
@@ -64,8 +65,7 @@ export default function RichTextEditorScreen() {
   // the format bar. Focus is the signal: it is what raises the keyboard.
   const [editing, setEditing] = useState(false);
 
-  // The only way down. `axis="vertical"` spends the return key on newlines, so
-  // tapping the preview panel is what dismisses the keyboard.
+  // Held so the preview panel can blur the field (see above).
   const field = useRef<TextFieldRef>(null);
 
   // A `Text` with an empty string renders nothing, which would collapse the layout.
@@ -85,7 +85,7 @@ export default function RichTextEditorScreen() {
           modifiers={[ignoreSafeArea({ regions: 'container', edges: 'vertical' })]}>
           {/* The header is the only thing the preview backs off for. It scrolls all
               the way to the panel's bottom edge. */}
-          <Card top={header} onTap={() => field.current?.blur()}>
+          <Card top={header} onTap={() => field.current?.blur()} tapHint="Dismisses the keyboard">
             {/* Scrolls rather than truncates once the rendered text outgrows the
                 panel. No `lineLimit` for the same reason — a cap here would clip the
                 text before the ScrollView ever got a chance to scroll it. */}
@@ -93,9 +93,9 @@ export default function RichTextEditorScreen() {
               <Text
                 markdownEnabled
                 modifiers={[
+                  padding({ vertical: 16 }),
                   // Small enough that a code span the width of an install command
                   // stays on one line.
-                  padding({ vertical: 16 }),
                   font({ textStyle: 'body' }),
                   multilineTextAlignment('leading'),
                 ]}>

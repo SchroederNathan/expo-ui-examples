@@ -16,8 +16,8 @@ import { fillMaxWidth, paddingAll, size } from '@expo/ui/jetpack-compose/modifie
 
 const CELL = 56;
 
-// Every indeterminate variant, unstyled. None of them is passed a color — they read
-// the Host's Material 3 palette, so this whole card retints with the system theme.
+// Every indeterminate variant, unstyled. None of the indicators is passed a color —
+// they read the Host's Material 3 palette and retint with the system theme.
 export function GalleryCard({ colors }: { colors: MaterialColors }) {
   return (
     <OutlinedCard modifiers={[fillMaxWidth()]}>
@@ -27,8 +27,8 @@ export function GalleryCard({ colors }: { colors: MaterialColors }) {
             Indeterminate set
           </Text>
           <Text color={colors.onSurfaceVariant} style={{ typography: 'bodySmall' }}>
-            Omit <Text style={{ fontFamily: 'monospace' }}>progress</Text> and each one
-            animates on its own forever.
+            Omit <Text style={{ fontFamily: 'monospace' }}>progress</Text> and each one animates on
+            its own forever.
           </Text>
         </Column>
 

@@ -1,4 +1,5 @@
-import { Host, HStack, Image, VStack, useNativeState } from '@expo/ui/swift-ui';
+import { Host } from '@expo/ui';
+import { HStack, Image, VStack, useNativeState } from '@expo/ui/swift-ui';
 import { frame, symbolEffect, type SymbolEffect } from '@expo/ui/swift-ui/modifiers';
 import type { SFSymbol } from 'sf-symbols-typescript';
 import { scheduleOnUI } from 'react-native-worklets';
@@ -15,7 +16,10 @@ const ROWS: Item[][] = [
     { symbol: 'heart.fill', effect: { effect: 'bounce', direction: 'up' } },
   ],
   [
-    { symbol: 'ellipsis.message.fill', effect: { effect: 'variableColor', fillStyle: 'cumulative' } },
+    {
+      symbol: 'ellipsis.message.fill',
+      effect: { effect: 'variableColor', fillStyle: 'cumulative' },
+    },
     { symbol: 'arrow.triangle.2.circlepath', effect: { effect: 'rotate', direction: 'clockwise' } },
     {
       symbol: 'rays',

@@ -3,6 +3,7 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "dependencies": {
+    "@expo/material-symbols": "^0.1.1",
     "@expo/ui": "~58.0.6",
     "expo": "~58.0.0-preview.6",
     "expo-asset": "~58.0.6",
@@ -18,7 +19,6 @@
     "expo-status-bar": "~58.0.1",
     "expo-symbols": "~58.0.2",
     "expo-system-ui": "~58.0.2",
-    "expo-web-browser": "~58.0.2",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "react-native": "0.88.0-rc.1",
@@ -33,16 +33,17 @@
     "@types/react": "~19.3.0",
     "eslint": "^9",
     "eslint-config-expo": "~58.0.2",
+    "prettier": "^3",
+    "sf-symbols-typescript": "^2.2.0",
     "typescript": "~6.0.3"
   },
   "scripts": {
     "start": "expo start",
-    "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\" \".claude/skills/**/*.mjs\""
   },
-  "private": true,
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "private": true
 }

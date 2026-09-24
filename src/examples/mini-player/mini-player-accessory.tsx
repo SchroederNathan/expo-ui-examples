@@ -30,12 +30,21 @@ export function MiniPlayerAccessory({ track, playing, onToggle, onNext, onOpen }
   // play/pause still works without expanding.
   if (placement === 'inline') {
     return (
-      <Pressable onPress={onOpen} style={styles.inlineRow}>
+      <Pressable
+        onPress={onOpen}
+        accessibilityRole="button"
+        accessibilityLabel={track.title}
+        accessibilityHint="Opens the player"
+        style={styles.inlineRow}>
         <Image source={ARTWORK} style={styles.inlineArt} />
         <Text numberOfLines={1} style={styles.inlineTitle}>
           {track.title}
         </Text>
-        <Pressable onPress={onToggle} hitSlop={8}>
+        <Pressable
+          onPress={onToggle}
+          hitSlop={8}
+          accessibilityRole="button"
+          accessibilityLabel={playing ? 'Pause' : 'Play'}>
           <SymbolView name={playing ? 'pause.fill' : 'play.fill'} size={16} tintColor={LABEL} />
         </Pressable>
       </Pressable>
@@ -44,7 +53,12 @@ export function MiniPlayerAccessory({ track, playing, onToggle, onNext, onOpen }
 
   return (
     <View style={styles.row}>
-      <Pressable onPress={onOpen} style={styles.openArea}>
+      <Pressable
+        onPress={onOpen}
+        accessibilityRole="button"
+        accessibilityLabel={`${track.title}, ${track.artist}`}
+        accessibilityHint="Opens the player"
+        style={styles.openArea}>
         <Image source={ARTWORK} style={styles.art} />
         <View style={styles.info}>
           <Text numberOfLines={1} style={styles.title}>
@@ -55,10 +69,20 @@ export function MiniPlayerAccessory({ track, playing, onToggle, onNext, onOpen }
           </Text>
         </View>
       </Pressable>
-      <Pressable onPress={onToggle} hitSlop={8} style={styles.button}>
+      <Pressable
+        onPress={onToggle}
+        hitSlop={8}
+        accessibilityRole="button"
+        accessibilityLabel={playing ? 'Pause' : 'Play'}
+        style={styles.button}>
         <SymbolView name={playing ? 'pause.fill' : 'play.fill'} size={20} tintColor={LABEL} />
       </Pressable>
-      <Pressable onPress={onNext} hitSlop={8} style={styles.button}>
+      <Pressable
+        onPress={onNext}
+        hitSlop={8}
+        accessibilityRole="button"
+        accessibilityLabel="Next track"
+        style={styles.button}>
         <SymbolView name="forward.fill" size={19} tintColor={LABEL} />
       </Pressable>
     </View>
@@ -90,6 +114,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 5,
+    borderCurve: 'continuous',
   },
   info: {
     flex: 1,
@@ -123,6 +148,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 5,
+    borderCurve: 'continuous',
   },
   inlineTitle: {
     flex: 1,

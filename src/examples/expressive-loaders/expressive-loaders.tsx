@@ -10,8 +10,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { GalleryCard } from './gallery-card';
 import { InstallCard } from './install-card';
 import { ScrubCard } from './scrub-card';
+import { useRefreshOnForeground } from './use-refresh-on-foreground';
 
 export function ExpressiveLoaders() {
+  useRefreshOnForeground();
   const colors = useMaterialColors();
   // The header is hidden, so Compose insets past the status bar itself.
   const insets = useSafeAreaInsets();
@@ -31,8 +33,8 @@ export function ExpressiveLoaders() {
               Expressive Loaders
             </Text>
             <Text color={colors.onSurfaceVariant} style={{ typography: 'bodyMedium' }}>
-              Material 3 Expressive&apos;s morphing loader and wavy progress bar, walked
-              through a fake app update.
+              Material 3 Expressive&apos;s morphing loader and wavy progress bar, walked through a
+              fake app update.
             </Text>
           </Column>
 
