@@ -21,6 +21,7 @@ import MaterialCarouselScreen from './material-carousel';
 import BottomSheetScreen from './bottom-sheet';
 import MiniPlayerScreen from './mini-player';
 import ColorPickerScreen from './color-picker';
+import SplitViewScreen from './split-view';
 
 type BaseExample = {
   slug: string;
@@ -158,6 +159,14 @@ export const EXAMPLES: Example[] = [
     description: 'Native SwiftUI color picker',
     systemImage: 'paintpalette.fill',
     screen: ColorPickerScreen,
+  },
+  {
+    slug: 'split-view',
+    title: 'Navigation Split View',
+    description:
+      'Sidebar, list, and detail columns that stack on iPhone and spread out when unfolded',
+    systemImage: 'sidebar.left',
+    screen: SplitViewScreen,
   },
 ];
 
