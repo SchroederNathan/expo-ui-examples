@@ -1,9 +1,19 @@
 import { Host } from '@expo/ui';
-import { Button, HStack, Image, Label, List, Section, Spacer, Text, VStack } from '@expo/ui/swift-ui';
+import {
+  Button,
+  HStack,
+  Image,
+  Label,
+  List,
+  Section,
+  Spacer,
+  Text,
+  VStack,
+} from '@expo/ui/swift-ui';
 import { buttonStyle, font, foregroundStyle } from '@expo/ui/swift-ui/modifiers';
 import { useRouter } from 'expo-router';
 
-import { IOS_EXAMPLES, UNIVERSAL_EXAMPLES, type Example } from '@/examples/registry';
+import { hrefFor, IOS_EXAMPLES, UNIVERSAL_EXAMPLES, type Example } from '@/examples/registry';
 
 function ExampleRow({ example, onPress }: { example: Example; onPress: () => void }) {
   return (
@@ -34,8 +44,7 @@ function ExampleRow({ example, onPress }: { example: Example; onPress: () => voi
 
 export default function ExampleList() {
   const router = useRouter();
-  const open = (example: Example) =>
-    router.push(example.href ?? { pathname: '/[slug]', params: { slug: example.slug } });
+  const open = (example: Example) => router.push(hrefFor(example));
 
   return (
     <Host style={{ flex: 1 }}>

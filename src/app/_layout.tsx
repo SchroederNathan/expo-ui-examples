@@ -2,6 +2,8 @@ import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Platform, PlatformColor, useColorScheme } from 'react-native';
 
+import { PLAYER_BG } from '@/examples/mini-player/colors';
+
 // `PlatformColor('label')` and the blur / large-title options are iOS-only, so the
 // native header styling is scoped to iOS. On Android each screen draws its own
 // title with Jetpack Compose instead.
@@ -44,7 +46,7 @@ export default function RootLayout() {
             headerShown: false,
             sheetAllowedDetents: [1.0],
             sheetGrabberVisible: true,
-            contentStyle: { backgroundColor: '#38332F' },
+            contentStyle: { backgroundColor: PLAYER_BG },
           }}
         />
       </Stack>

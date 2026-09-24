@@ -9,12 +9,14 @@ const [slug, title, description, systemImage = 'star.fill'] = process.argv.slice
 
 if (!slug || !title || !description) {
   console.error(
-    'Usage: node .claude/skills/add-example/scaffold.mjs <slug> "<Title>" "<Description>" [sf-symbol]',
+    'Usage: node .claude/skills/add-example/scaffold.mjs <slug> "<Title>" "<Description>" [sf-symbol]'
   );
   process.exit(1);
 }
-if (!/^[a-z][a-z0-9-]*$/.test(slug)) {
-  console.error(`Slug "${slug}" must be kebab-case (lowercase letters, digits, dashes).`);
+if (!/^[a-z][a-z0-9]*(-[a-z0-9]+)*$/.test(slug)) {
+  console.error(
+    `Slug "${slug}" must be kebab-case: lowercase words of letters and digits joined by single dashes.`
+  );
   process.exit(1);
 }
 
@@ -37,15 +39,24 @@ const pascal = slug
   .join('');
 const componentName = `${pascal}Screen`;
 
+// Title and description are free text, so they go into the generated code as
+// escaped single-quoted string literals — never raw. "Apple's Gauges" or a `{`
+// would otherwise break registry.ts or the screen's JSX.
+const quote = (value) => `'${value.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`;
+
 const screen = `import { Host } from '@expo/ui';
 import { Text, VStack } from '@expo/ui/swift-ui';
-import { font, foregroundStyle } from '@expo/ui/swift-ui/modifiers';
+import { font, foregroundStyle, frame } from '@expo/ui/swift-ui/modifiers';
 
 export default function ${componentName}() {
   return (
     <Host style={{ flex: 1 }}>
-      <VStack spacing={12}>
-        <Text modifiers={[font({ textStyle: 'headline' })]}>${title}</Text>
+      {/* Host top-aligns its content, so the stack claims the full host and
+          centers itself. */}
+      <VStack
+        spacing={12}
+        modifiers={[frame({ maxWidth: Infinity, maxHeight: Infinity, alignment: 'center' })]}>
+        <Text modifiers={[font({ textStyle: 'headline' })]}>{${quote(title)}}</Text>
         <Text
           modifiers={[
             font({ textStyle: 'footnote' }),
@@ -66,15 +77,15 @@ if (registry.includes(`slug: '${slug}'`)) {
 }
 
 const importLine = `import ${componentName} from './${slug}';`;
-const lastImport = registry.lastIndexOf("\nimport ");
+const lastImport = registry.lastIndexOf('\nimport ');
 const lastImportEnd = registry.indexOf('\n', lastImport + 1);
 registry = registry.slice(0, lastImportEnd) + `\n${importLine}` + registry.slice(lastImportEnd);
 
 const entry = `  {
     slug: '${slug}',
-    title: '${title}',
-    description: '${description}',
-    systemImage: '${systemImage}',
+    title: ${quote(title)},
+    description: ${quote(description)},
+    systemImage: ${quote(systemImage)},
     screen: ${componentName},
   },
 `;

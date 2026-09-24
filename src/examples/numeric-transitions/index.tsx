@@ -1,11 +1,6 @@
 import { Host } from '@expo/ui';
 import { Button, HStack, Image, VStack } from '@expo/ui/swift-ui';
-import {
-  buttonBorderShape,
-  buttonStyle,
-  controlSize,
-  frame,
-} from '@expo/ui/swift-ui/modifiers';
+import { buttonBorderShape, buttonStyle, controlSize, frame } from '@expo/ui/swift-ui/modifiers';
 import { useState } from 'react';
 
 import { AnimatedNumber } from './animated-number';
@@ -25,7 +20,7 @@ export default function NumericTransitionsScreen() {
           host and centers itself. */}
       <VStack
         spacing={32}
-        modifiers={[frame({ maxWidth: 9999, maxHeight: 9999, alignment: 'center' })]}>
+        modifiers={[frame({ maxWidth: Infinity, maxHeight: Infinity, alignment: 'center' })]}>
         <AnimatedNumber value={count} />
         <HStack spacing={16}>
           <Button

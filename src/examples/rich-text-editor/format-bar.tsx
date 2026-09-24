@@ -1,5 +1,5 @@
 import { Image, Picker } from '@expo/ui/swift-ui';
-import { pickerStyle, tag } from '@expo/ui/swift-ui/modifiers';
+import { accessibilityLabel, pickerStyle, tag } from '@expo/ui/swift-ui/modifiers';
 import type { SFSymbol } from 'sf-symbols-typescript';
 
 import { useState } from 'react';
@@ -13,20 +13,28 @@ type FormatBarProps = {
 type Format = {
   /** The segment's `tag`, and what `onSelectionChange` reports back. */
   id: string;
+  /** Read by VoiceOver: the segments are icon-only. */
+  label: string;
   symbol: SFSymbol;
   apply: (state: RichText) => void;
 };
 
 const FORMATS: Format[] = [
-  { id: 'bold', symbol: 'bold', apply: (state) => state.wrap('**', 'bold') },
-  { id: 'italic', symbol: 'italic', apply: (state) => state.wrap('*', 'italic') },
-  { id: 'strike', symbol: 'strikethrough', apply: (state) => state.wrap('~~', 'strike') },
+  { id: 'bold', label: 'Bold', symbol: 'bold', apply: (state) => state.wrap('**', 'bold') },
+  { id: 'italic', label: 'Italic', symbol: 'italic', apply: (state) => state.wrap('*', 'italic') },
+  {
+    id: 'strike',
+    label: 'Strikethrough',
+    symbol: 'strikethrough',
+    apply: (state) => state.wrap('~~', 'strike'),
+  },
   {
     id: 'code',
+    label: 'Code',
     symbol: 'chevron.left.forwardslash.chevron.right',
     apply: (state) => state.wrap('`', 'code'),
   },
-  { id: 'link', symbol: 'link', apply: (state) => state.link() },
+  { id: 'link', label: 'Link', symbol: 'link', apply: (state) => state.link() },
 ];
 
 /** Two tags no segment carries, so neither draws a highlight. See `selection` below. */
@@ -39,14 +47,10 @@ const NOTHING = ['nothing-a', 'nothing-b'];
 export function FormatBar({ state }: FormatBarProps) {
   const [taps, setTaps] = useState(0);
 
-  // A segmented control selects; these segments act, so the tapped one has to give
-  // its highlight back. It cannot simply be told "select nothing": native copies
-  // `selection` into the picker only when the prop *changes*, so a constant value
-  // never lands. Hence two of them, alternating on every tap.
-  //
-  // Leaving the highlight is not an option either — it would claim an active
-  // format, and a second tap on an already-selected segment is not a selection
-  // change, so that format would quietly stop firing.
+  // A segmented control selects; these segments act, so the tapped one gives its
+  // highlight back (a kept highlight would claim an active format, and a second
+  // tap on it would not fire). Native copies `selection` only when the prop
+  // changes, so "select nothing" alternates between two unused tags.
   const selection = NOTHING[taps % NOTHING.length];
 
   return (
@@ -59,7 +63,12 @@ export function FormatBar({ state }: FormatBarProps) {
       }}
       modifiers={[pickerStyle('segmented')]}>
       {FORMATS.map((format) => (
-        <Image key={format.id} systemName={format.symbol} size={15} modifiers={[tag(format.id)]} />
+        <Image
+          key={format.id}
+          systemName={format.symbol}
+          size={15}
+          modifiers={[tag(format.id), accessibilityLabel(format.label)]}
+        />
       ))}
     </Picker>
   );

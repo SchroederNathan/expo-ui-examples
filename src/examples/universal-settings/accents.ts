@@ -11,7 +11,3 @@ export const ACCENTS = [
   { name: 'Orange', color: '#E8590C' },
   { name: 'Pink', color: '#C2185B' },
 ];
-
-export const MIN_TEXT_SIZE = 13;
-export const MAX_TEXT_SIZE = 24;
-export const DEFAULT_TEXT_SIZE = 17;

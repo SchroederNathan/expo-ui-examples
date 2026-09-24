@@ -1,7 +1,7 @@
 import { BottomSheet, Column, RNHostView, Text } from '@expo/ui';
 import { useEffect, useState } from 'react';
-import { useColorScheme } from 'react-native';
 
+import { useSheetColors } from './colors';
 import { ContinueButton } from './continue-button';
 import { IconStack } from './icon-stack';
 import { ROW_COUNT, RowsReveal } from './rows-reveal';
@@ -27,19 +27,25 @@ type Props = {
 export function HealthSyncSheet({ isPresented, onDismiss }: Props) {
   const [visibleRows, setVisibleRows] = useState(0);
   const allShown = visibleRows >= ROW_COUNT;
-  const dark = useColorScheme() === 'dark';
+  const colors = useSheetColors();
 
-  // Compose provides no LocalContentColor inside a bare Column, so every Text
-  // needs an explicit color to survive Android dark mode.
-  const titleColor = dark ? '#FFFFFF' : '#000000';
-  const captionColor = dark ? '#98989F' : '#6C6C70';
+  // A reopen inside the cleanup delay cancels the pending reset below, so start
+  // over here instead. Adjusting state during render means the old rows never
+  // paint in the new presentation.
+  const [wasPresented, setWasPresented] = useState(isPresented);
+  if (isPresented !== wasPresented) {
+    setWasPresented(isPresented);
+    if (isPresented && visibleRows > 0) {
+      setVisibleRows(0);
+    }
+  }
 
   useEffect(() => {
-    if (isPresented) return;
+    if (isPresented || visibleRows === 0) return;
 
     const cleanup = setTimeout(() => setVisibleRows(0), DISMISS_CLEANUP_DELAY_MS);
     return () => clearTimeout(cleanup);
-  }, [isPresented]);
+  }, [isPresented, visibleRows]);
 
   return (
     <BottomSheet isPresented={isPresented} onDismiss={onDismiss}>
@@ -48,11 +54,11 @@ export function HealthSyncSheet({ isPresented, onDismiss }: Props) {
           <IconStack synced={visibleRows > 0} />
         </RNHostView>
         <Text
-          textStyle={{ fontSize: 22, fontWeight: '700', color: titleColor }}
+          textStyle={{ fontSize: 22, fontWeight: '700', color: colors.label }}
           style={{ paddingTop: 8 }}>
           Apple Health Sync
         </Text>
-        <Text textStyle={{ fontSize: 15, color: captionColor }} style={{ height: 40 }}>
+        <Text textStyle={{ fontSize: 15, color: colors.secondaryLabel }} style={{ height: 40 }}>
           Connect with Apple Health so both apps can gossip about your workouts behind your back.
         </Text>
         <RowsReveal count={visibleRows} />

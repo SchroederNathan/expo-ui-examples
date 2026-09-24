@@ -25,9 +25,11 @@ import { useState } from 'react';
 const SCALE = 1.7;
 const BOX = 38 * SCALE + 8;
 
+const INITIAL = 0.35;
+
 export function ScrubCard({ colors }: { colors: MaterialColors }) {
-  const [value, setValue] = useState(0.35);
-  const progress = useNativeState<number | null>(0.35);
+  const [value, setValue] = useState(INITIAL);
+  const progress = useNativeState<number | null>(INITIAL);
 
   // The slider is a JS component, so its value lands in React state either way. The
   // native state exists only because that's the shape `LoadingIndicator` wants.
@@ -44,12 +46,15 @@ export function ScrubCard({ colors }: { colors: MaterialColors }) {
             Scrub the morph
           </Text>
           <Text color={colors.onSurfaceVariant} style={{ typography: 'bodySmall' }}>
-            Determinate loaders don&apos;t just fill — the shape itself is a function of
-            progress. Drag to see it.
+            Determinate loaders don&apos;t just fill — the shape itself is a function of progress.
+            Drag to see it.
           </Text>
         </Column>
 
-        <Row verticalAlignment="center" horizontalArrangement="spaceEvenly" modifiers={[fillMaxWidth()]}>
+        <Row
+          verticalAlignment="center"
+          horizontalArrangement="spaceEvenly"
+          modifiers={[fillMaxWidth()]}>
           <Column horizontalAlignment="center" verticalArrangement={{ spacedBy: 8 }}>
             <Box modifiers={[size(BOX, BOX)]} contentAlignment="center">
               <LoadingIndicator

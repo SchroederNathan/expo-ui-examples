@@ -1,7 +1,7 @@
 import { Button, Column, Host, Spacer, Text } from '@expo/ui';
 import { useState } from 'react';
-import { useColorScheme } from 'react-native';
 
+import { useSheetColors } from './colors';
 import { HealthSyncSheet } from './sheet-content';
 
 // Bottom Sheet — a universal BottomSheet that fits its content and grows
@@ -11,7 +11,7 @@ import { HealthSyncSheet } from './sheet-content';
 // platform-split Continue button (glass is SwiftUI-only).
 export default function BottomSheetScreen() {
   const [isPresented, setIsPresented] = useState(false);
-  const dark = useColorScheme() === 'dark';
+  const colors = useSheetColors();
 
   return (
     <>
@@ -24,13 +24,13 @@ export default function BottomSheetScreen() {
             textStyle={{
               fontSize: 15,
               textAlign: 'center',
-              color: dark ? '#98989F' : '#6C6C70',
+              color: colors.secondaryLabel,
             }}>
-            The sheet below has no snap points, so it always fits its content. Press Continue
-            inside it to watch it grow.
+            The sheet below has no snap points, so it always fits its content. Press Continue inside
+            it to watch it grow.
           </Text>
           <Button variant="text" onPress={() => setIsPresented(true)}>
-            <Text textStyle={{ color: '#007AFF' }}>Show sheet</Text>
+            <Text textStyle={{ color: colors.tint }}>Show sheet</Text>
           </Button>
           <Spacer flexible />
         </Column>

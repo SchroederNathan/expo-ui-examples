@@ -3,6 +3,7 @@ import {
   Host,
   Surface,
   Text,
+  getMaterialColors,
   isDynamicColorAvailable,
   useMaterialColors,
 } from '@expo/ui/jetpack-compose';
@@ -12,38 +13,30 @@ import {
   padding,
   verticalScroll,
 } from '@expo/ui/jetpack-compose/modifiers';
-import { useEffect, useState } from 'react';
-import { AppState } from 'react-native';
+import { useState } from 'react';
+import { useColorScheme } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { PaletteStrip } from './palette-strip';
 import { SeedPicker } from './seed-picker';
 import { SEEDS, type Seed } from './seeds';
 import { Showcase } from './showcase';
+import { useRefreshOnForeground } from './use-refresh-on-foreground';
 
 export function MaterialYou() {
   const [seed, setSeed] = useState<Seed>(SEEDS[0]);
   // The header is hidden, so Compose has to inset past the status bar itself.
   const insets = useSafeAreaInsets();
 
-  // `useMaterialColors` reads the palette on each render but doesn't subscribe to
-  // system changes, so change your wallpaper and the JS-side colors below would go
-  // stale while the Compose components retheme themselves. Re-rendering on
-  // foreground keeps both halves in sync after a trip to the wallpaper picker.
-  const [, resync] = useState(0);
-  useEffect(() => {
-    const sub = AppState.addEventListener('change', (status) => {
-      if (status === 'active') {
-        resync((n) => n + 1);
-      }
-    });
-    return () => sub.remove();
-  }, []);
+  const scheme = useColorScheme() === 'dark' ? 'dark' : 'light';
+  useRefreshOnForeground();
 
   // With a `seedColor`, Android derives the whole palette through SchemeTonalSpot —
-  // the same algorithm Material You uses. Without one, it comes from the wallpaper.
-  const colors = useMaterialColors({ seedColor: seed.color ?? undefined });
+  // the same algorithm Material You uses. Without one, it comes from the wallpaper,
+  // so the Wallpaper seed reuses that palette instead of asking native twice.
   const wallpaper = useMaterialColors();
+  const colors =
+    seed.color === null ? wallpaper : getMaterialColors({ scheme, seedColor: seed.color });
 
   const caption =
     seed.color === null
@@ -73,12 +66,7 @@ export function MaterialYou() {
             </Text>
           </Column>
 
-          <SeedPicker
-            selected={seed}
-            onSelect={setSeed}
-            wallpaper={wallpaper}
-            colors={colors}
-          />
+          <SeedPicker selected={seed} onSelect={setSeed} wallpaper={wallpaper} colors={colors} />
 
           <PaletteStrip colors={colors} />
 

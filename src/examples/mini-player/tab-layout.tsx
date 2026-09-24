@@ -2,6 +2,7 @@ import { Stack, useRouter } from 'expo-router';
 import { NativeTabs } from 'expo-router/native-tabs';
 import { PlatformColor } from 'react-native';
 
+import { MUSIC_RED } from './colors';
 import { MiniPlayerAccessory } from './mini-player-accessory';
 import { player, usePlayer } from './player-store';
 import { TRACKS } from './tracks';
@@ -17,7 +18,7 @@ export default function MiniPlayerTabLayout() {
   return (
     <>
       <Stack.Screen options={{ headerTransparent: true, title: '' }} />
-      <NativeTabs minimizeBehavior="onScrollDown" tintColor="#FA233B">
+      <NativeTabs minimizeBehavior="onScrollDown" tintColor={MUSIC_RED}>
         <NativeTabs.BottomAccessory>
           <MiniPlayerAccessory
             track={TRACKS[trackIndex]}
@@ -33,26 +34,26 @@ export default function MiniPlayerTabLayout() {
         <NativeTabs.Trigger
           name="index"
           contentStyle={{ backgroundColor: PlatformColor('systemBackground') }}>
-          <NativeTabs.Trigger.Icon sf="house.fill" md="home" />
+          <NativeTabs.Trigger.Icon sf="house.fill" />
           <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="new">
-          <NativeTabs.Trigger.Icon sf="square.grid.2x2.fill" md="grid_view" />
+          <NativeTabs.Trigger.Icon sf="square.grid.2x2.fill" />
           <NativeTabs.Trigger.Label>New</NativeTabs.Trigger.Label>
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="radio">
-          <NativeTabs.Trigger.Icon sf="dot.radiowaves.left.and.right" md="radio" />
+          <NativeTabs.Trigger.Icon sf="dot.radiowaves.left.and.right" />
           <NativeTabs.Trigger.Label>Radio</NativeTabs.Trigger.Label>
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="library">
-          <NativeTabs.Trigger.Icon sf="music.note.square.stack.fill" md="library_music" />
+          <NativeTabs.Trigger.Icon sf="music.note.square.stack.fill" />
           <NativeTabs.Trigger.Label>Library</NativeTabs.Trigger.Label>
         </NativeTabs.Trigger>
         {/* `role="search"` splits this tab into its own trailing circle on
             iOS 26, so the minimized bar reads tab pill · accessory · search —
             the accessory stays centered instead of sliding bottom-right. */}
         <NativeTabs.Trigger name="search" role="search">
-          <NativeTabs.Trigger.Icon sf="magnifyingglass" md="search" />
+          <NativeTabs.Trigger.Icon sf="magnifyingglass" />
           <NativeTabs.Trigger.Label>Search</NativeTabs.Trigger.Label>
         </NativeTabs.Trigger>
       </NativeTabs>

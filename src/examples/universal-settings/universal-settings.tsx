@@ -1,3 +1,4 @@
+import ArrowBack from '@expo/material-symbols/arrow_back.xml';
 import {
   Button,
   Checkbox,
@@ -17,12 +18,16 @@ import { useColorScheme } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AccentSwatches } from './accent-swatches';
-import { ACCENTS, DEFAULT_TEXT_SIZE, MAX_TEXT_SIZE, MIN_TEXT_SIZE } from './accents';
+import { ACCENTS } from './accents';
 
 // SF Symbols mirror themselves in a right-to-left layout; an XML vector drawable
 // needs `android:autoMirrored`, which @expo/ui's loader doesn't read — so this
 // arrow keeps pointing left while the RTL switch below is on.
-const BACK = Icon.select({ ios: 'chevron.backward', android: require('./icons/arrow_back.xml') });
+const BACK = Icon.select({ ios: 'chevron.backward', android: ArrowBack });
+
+const MIN_TEXT_SIZE = 13;
+const MAX_TEXT_SIZE = 24;
+const DEFAULT_TEXT_SIZE = 17;
 
 type Props = {
   /** Owned by the route adapter so this tree stays free of navigation. */
@@ -90,8 +95,20 @@ export function UniversalSettings({ onBack }: Props) {
               platforms, and the screen title is doing that job here. */}
           <FieldGroup.Section>
             <FieldGroup.SectionHeader>
-              <Row alignment="center" spacing={12} style={{ paddingTop: insets.top + 8 }}>
-                <Icon name={BACK} size={20} color={titleColor} onPress={onBack} />
+              <Row alignment="center" style={{ paddingTop: insets.top + 4 }}>
+                {/* Padded out to a 44pt-tall target. The padding stays off the
+                    leading side so the chevron keeps its place at the edge. SwiftUI
+                    does not hit-test empty padding, so a near-invisible fill makes
+                    the padded area tappable on iOS too. */}
+                <Row
+                  style={{
+                    paddingVertical: 12,
+                    paddingRight: 12,
+                    backgroundColor: 'rgba(0, 0, 0, 0.001)',
+                  }}
+                  onPress={onBack}>
+                  <Icon name={BACK} size={20} color={titleColor} accessibilityLabel="Back" />
+                </Row>
                 <Text textStyle={{ fontSize: 30, fontWeight: '700', color: titleColor }}>
                   Settings
                 </Text>
