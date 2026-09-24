@@ -21,6 +21,7 @@ import MaterialCarouselScreen from './material-carousel';
 import BottomSheetScreen from './bottom-sheet';
 import MiniPlayerScreen from './mini-player';
 import ColorPickerScreen from './color-picker';
+import PullDownMenuScreen from './pull-down-menu';
 
 type BaseExample = {
   slug: string;
@@ -158,6 +159,13 @@ export const EXAMPLES: Example[] = [
     description: 'Native SwiftUI color picker',
     systemImage: 'paintpalette.fill',
     screen: ColorPickerScreen,
+  },
+  {
+    slug: 'pull-down-menu',
+    title: 'Pull-Down Menu',
+    description: 'Tap the ellipsis on a photo card for a SwiftUI Menu with a favorite toggle and album submenu',
+    systemImage: 'ellipsis.circle',
+    screen: PullDownMenuScreen,
   },
 ];
 
