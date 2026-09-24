@@ -1,6 +1,6 @@
-import { Host, Icon } from '@expo/ui';
-import { useEffect } from 'react';
-import { StyleSheet, Text, View, useColorScheme, useWindowDimensions } from 'react-native';
+import { Column, Host, Icon, RNHostView } from '@expo/ui';
+import { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, useColorScheme } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 import { TIMING } from './timing';
@@ -36,6 +36,31 @@ function revealHeightFor(count: number) {
   return count === 0 ? 0 : TOP_GAP + count * ROW_HEIGHT + (count - 1) * ROW_GAP;
 }
 
+// matchContents sizes the island to its RN content, so the rows need an
+// explicit width, and the window can't supply it: the sheet is screen-wide
+// only on a regular phone. It sits inside the horizontal safe area (iPhone
+// Duo's folded display gives up an 84pt sensor column) and floats as a narrow
+// card on a wide display (the unfolded Duo, tablets). An island wider than
+// the sheet's column overflows both edges. So a zero-height probe island —
+// which fills whatever its parent offers — reads the real content width, and
+// the rows take exactly that.
+export function RowsReveal({ count }: { count: number }) {
+  const [width, setWidth] = useState(0);
+
+  return (
+    <Column spacing={0}>
+      <Column style={{ height: 0 }}>
+        <RNHostView onLayout={(e) => setWidth(Math.floor(e.nativeEvent.layout.width))}>
+          <View />
+        </RNHostView>
+      </Column>
+      <RNHostView matchContents>
+        <RevealRows count={count} width={width} />
+      </RNHostView>
+    </Column>
+  );
+}
+
 // The sheet only animates its growth if the content height itself animates:
 // iOS fitToContents snaps its detent to a newly measured size, and the M3
 // sheet re-measures instantly, so natively-mounted rows would just pop in.
@@ -43,10 +68,9 @@ function revealHeightFor(count: number) {
 // platforms a continuous stream of content sizes — that is what makes the
 // sheet visibly grow. The row icons stay universal Icon pairs by nesting a
 // tiny Host per row back inside the island.
-export function RowsReveal({ count }: { count: number }) {
+function RevealRows({ count, width }: { count: number; width: number }) {
   const height = useSharedValue(0);
   const dark = useColorScheme() === 'dark';
-  const { width } = useWindowDimensions();
 
   useEffect(() => {
     height.set(withTiming(revealHeightFor(count), TIMING));
@@ -62,10 +86,7 @@ export function RowsReveal({ count }: { count: number }) {
   const textColor = dark ? '#FFFFFF' : '#000000';
 
   return (
-    // matchContents sizes the host to this view, so it needs an explicit
-    // width: the sheet is screen-wide on phones and both platforms already
-    // inset its content by 16.
-    <Animated.View style={[styles.reveal, { width: width - 32 }, revealStyle]}>
+    <Animated.View style={[styles.reveal, { width }, revealStyle]}>
       {ROWS.map((row) => (
         <Row
           key={row.text}
