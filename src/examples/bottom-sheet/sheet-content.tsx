@@ -55,9 +55,7 @@ export function HealthSyncSheet({ isPresented, onDismiss }: Props) {
         <Text textStyle={{ fontSize: 15, color: captionColor }} style={{ height: 40 }}>
           Connect with Apple Health so both apps can gossip about your workouts behind your back.
         </Text>
-        <RNHostView matchContents>
-          <RowsReveal count={visibleRows} />
-        </RNHostView>
+        <RowsReveal count={visibleRows} />
         <ContinueButton
           label={allShown ? 'Done' : 'Continue'}
           onPress={
