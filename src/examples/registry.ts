@@ -164,7 +164,7 @@ export const EXAMPLES: Example[] = [
     slug: 'split-view',
     title: 'Navigation Split View',
     description:
-      'Sidebar, list, and detail columns that stack on iPhone and spread out when unfolded',
+      'A mail client whose mailboxes, messages, and reader stack on iPhone and spread out on iPad',
     systemImage: 'sidebar.left',
     screen: SplitViewScreen,
   },
