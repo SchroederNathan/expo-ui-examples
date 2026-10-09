@@ -225,9 +225,9 @@ export default function SplitViewScreen() {
                     modifiers={[navigationTitle(mailbox.name)]}
                   />
                 )}
-                {/* The bottom bar reads like Mail's: the unread filter, the status
-                    centered by its `status` placement, and New Message. Toolbar items
-                    render in reverse order, so New Message comes first here. */}
+                {/* The bottom bar reads like Mail's: the unread filter and New Message.
+                    Toolbar items render in reverse order, so New Message comes first
+                    here. */}
                 <Toolbar.Content>
                   <ToolbarItem placement="bottomBar">
                     <Button
@@ -235,11 +235,6 @@ export default function SplitViewScreen() {
                       systemImage="square.and.pencil"
                       onPress={() => startDraft('New Message')}
                     />
-                  </ToolbarItem>
-                  <ToolbarItem placement="status">
-                    <Text modifiers={[font({ textStyle: 'caption' }), secondary]}>
-                      {unreadOnly ? 'Filtered by: Unread' : 'Updated Just Now'}
-                    </Text>
                   </ToolbarItem>
                   <ToolbarItem placement="bottomBar">
                     <Button
