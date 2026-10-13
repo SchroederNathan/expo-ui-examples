@@ -23,6 +23,7 @@ A collection of small, self-contained [`@expo/ui`](https://docs.expo.dev/version
 | [Material You](src/examples/material-you) | Seed a Material 3 palette from a color or the device wallpaper with `useMaterialColors` |
 | [Expressive Loaders](src/examples/expressive-loaders) | Morphing `LoadingIndicator` and wavy progress indicators driven by a fake install |
 | [Material 3 Carousel](src/examples/material-carousel) | Hero, multi-browse, and uncontained native Compose carousels browsing one photo set |
+| [Hinge](src/examples/hinge/android.tsx) | Live `expo-hinge` angle and system status with grouped session stats and reset |
 
 ### Universal
 
@@ -57,9 +58,27 @@ Android icons come from [`@expo/material-symbols`](https://www.npmjs.com/package
 
 Both scripts run a native build (`expo run:*`) — `@expo/ui` renders real SwiftUI and Jetpack Compose views, so Expo Go isn't enough.
 
-The Hinge example needs Xcode 27.1+ and iOS 27.1+. `package.json` builds the `ExpoUI` pod from source so the new `ArrangementView` is compiled against the local SDK. The SDK 58.0.14 precompiled framework does not include the native arrangement container.
+The iOS Hinge example needs Xcode 27.1+ and iOS 27.1+. `package.json` builds the `ExpoUI` pod from source so the new `ArrangementView` is compiled against the local SDK. The SDK 58.0.14 precompiled framework does not include the native arrangement container. The Android Hinge screen shares its session logic and needs Android 11+ and a public hinge-angle sensor; `isAvailable()` alone does not confirm sensor support.
 
 `bun run lint` runs ESLint and `bun run format` applies the repo's Prettier config.
+
+### Test Hinge on an Android emulator
+
+Create a foldable virtual device in Android Studio, such as Pixel Fold, with Android 11+ and a virtual hinge sensor. Run `bun run android` and open **Hinge** from the Android examples list.
+
+Check that `hinge-angle0` is enabled, then change its angle. Replace `emulator-5554` with your emulator's serial from `adb devices`.
+
+```bash
+adb -s emulator-5554 emu sensor status
+adb -s emulator-5554 emu sensor set hinge-angle0 90
+adb -s emulator-5554 emu sensor set hinge-angle0 120.5
+adb -s emulator-5554 emu sensor set hinge-angle0 0
+adb -s emulator-5554 emu sensor set hinge-angle0 180
+```
+
+The angle updates live. The system status is **Partially open** at 90° and **Fully open** at 180°. At 0°, the Pixel Fold emulator switches to its cover display and reports **Unknown**. The session keeps its lowest and highest readings across folds. **Reset session** sets both to the current angle and clears the event count.
+
+If the demo shows **API available: Yes** but **No reading**, check that you chose a foldable profile with `hinge-angle0` enabled. An emulator test verifies the Android integration; test a physical Fold 8 separately to confirm that its firmware exposes the sensor.
 
 ### Demoing Material You
 
