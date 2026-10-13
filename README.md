@@ -14,6 +14,7 @@ A collection of small, self-contained [`@expo/ui`](https://docs.expo.dev/version
 | [Rich Text Editor](src/examples/rich-text-editor) | Two `ConcentricRectangle` panels (iOS 26+; plain rounded panels before that), with a segmented format bar that rides the keyboard's safe area |
 | [Apple Zoom](src/examples/apple-zoom) | A photo grid whose thumbnails zoom into a full-screen photo with `Link.AppleZoom` (iOS 18+) |
 | [Color Picker](src/examples/color-picker) | The native SwiftUI `ColorPicker` repainting the whole page with the selected color |
+| [Hinge](src/examples/hinge) | `expo-hinge` angle and status, native grouped session stats, and adaptive `ArrangementView` panels (iOS 27.1+) |
 
 ### Android
 
@@ -55,6 +56,8 @@ Android icons come from [`@expo/material-symbols`](https://www.npmjs.com/package
    ```
 
 Both scripts run a native build (`expo run:*`) — `@expo/ui` renders real SwiftUI and Jetpack Compose views, so Expo Go isn't enough.
+
+The Hinge example needs Xcode 27.1+ and iOS 27.1+. `package.json` builds the `ExpoUI` pod from source so the new `ArrangementView` is compiled against the local SDK. The SDK 58.0.14 precompiled framework does not include the native arrangement container.
 
 `bun run lint` runs ESLint and `bun run format` applies the repo's Prettier config.
 

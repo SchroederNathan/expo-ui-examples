@@ -22,6 +22,7 @@ import BottomSheetScreen from './bottom-sheet';
 import MiniPlayerScreen from './mini-player';
 import ColorPickerScreen from './color-picker';
 import SplitViewScreen from './split-view';
+import HingeScreen from './hinge';
 
 type BaseExample = {
   slug: string;
@@ -167,6 +168,13 @@ export const EXAMPLES: Example[] = [
       'A mail client whose mailboxes, messages, and reader stack on iPhone and spread out on iPad',
     systemImage: 'sidebar.left',
     screen: SplitViewScreen,
+  },
+  {
+    slug: 'hinge',
+    title: 'Hinge',
+    description: 'Angle, posture, and session stats that adapt as you fold',
+    systemImage: 'rectangle.split.2x1',
+    screen: HingeScreen,
   },
 ];
 
