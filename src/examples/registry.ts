@@ -1,4 +1,5 @@
 import BottomPanelOpen from '@expo/material-symbols/bottom_panel_open.xml';
+import DevicesFold from '@expo/material-symbols/devices_fold.xml';
 import Palette from '@expo/material-symbols/palette.xml';
 import ProgressActivity from '@expo/material-symbols/progress_activity.xml';
 import Tune from '@expo/material-symbols/tune.xml';
@@ -23,6 +24,7 @@ import MiniPlayerScreen from './mini-player';
 import ColorPickerScreen from './color-picker';
 import SplitViewScreen from './split-view';
 import HingeScreen from './hinge';
+import AndroidHingeScreen from './hinge/android';
 
 type BaseExample = {
   slug: string;
@@ -175,6 +177,15 @@ export const EXAMPLES: Example[] = [
     description: 'Angle, posture, and session stats that adapt as you fold',
     systemImage: 'rectangle.split.2x1',
     screen: HingeScreen,
+  },
+  {
+    slug: 'hinge-android',
+    title: 'Hinge',
+    description: 'Live fold angle, system posture, and session stats',
+    systemImage: 'rectangle.split.2x1',
+    platform: 'android',
+    materialIcon: DevicesFold,
+    screen: AndroidHingeScreen,
   },
 ];
 
