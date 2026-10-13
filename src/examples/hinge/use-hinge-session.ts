@@ -1,7 +1,7 @@
 import { addHingeListener, getHinge, type Hinge } from 'expo-hinge';
 import { useEffect, useState } from 'react';
 
-type HingeSession = {
+export type HingeSession = {
   minimum: number | null;
   maximum: number | null;
   events: number;
